@@ -57,7 +57,7 @@
 <script>
 const S={risk:"yellow",env:{t:21.6,h:68.2},s:[["01","上层左侧",22.1,.2,"green"],["02","上层右侧",22.7,.3,"green"],["03","中层核心",24.8,.8,"yellow"],["04","中层边缘",23.2,.4,"green"],["05","下层左侧",21.9,.1,"green"],["06","下层右侧",22.4,.2,"green"]],alarms:[["今天 11:26","持续升温","探头 03","yellow","近 60 分钟升温约 0.8℃"],["今天 09:42","湿度偏高","环境节点","yellow","湿度持续高于 67%RH"],["昨天 18:08","局部温差","探头 02 / 03","red","两测点温差一度扩大至 4.1℃"],["昨天 12:31","通信恢复","控制终端","green","网络恢复，数据补传完成"]]};
 const $=q=>document.querySelector(q),$=q=>[...document.querySelectorAll(q)],lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
-let deviceOnline=false,serialPort=null;
+let deviceOnline=false,serialPort=null,serialReader=null,manualClosing=false;
 const CH340_VID=0x1A86;
 function setDeviceOnline(on,detail){
   deviceOnline=on;
@@ -66,39 +66,87 @@ function setDeviceOnline(on,detail){
     pill.className="pill device-on";pill.textContent="● 终端在线";
     strip.className="device-strip on";
     strip.innerHTML="<b>● CODBOT 终端已接入</b><span>"+(detail||"CH340 · USB 串口 · 联调数据同步中")+"</span>";
-    btn.textContent="终端已连接";btn.disabled=true;
+    btn.textContent="断开终端";btn.disabled=false;
     foot.textContent="● 终端在线";
     $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 同步";
   }else{
     pill.className="pill device-off";pill.textContent="○ 终端离线";
     strip.className="device-strip off";
-    strip.innerHTML="<b>○ CODBOT 终端未接入</b><span>插入绿色 CODBOT；首次使用点击右上角“连接终端”完成浏览器授权</span>";
+    strip.innerHTML="<b>○ CODBOT 终端未接入</b><span>插入绿色 CODBOT；首次使用点击右上角“连接终端”，选择 USB-SERIAL CH340</span>";
     btn.textContent="连接终端";btn.disabled=false;
     foot.textContent="○ 终端离线";
     $("#heart").textContent="等待设备接入";
+  }
+}
+async function markDisconnected(showToast=true){
+  const oldPort=serialPort;
+  serialPort=null;
+  deviceOnline=false;
+  if(serialReader){
+    try{await serialReader.cancel()}catch(_){}
+    try{serialReader.releaseLock()}catch(_){}
+    serialReader=null;
+  }
+  if(oldPort){
+    try{await oldPort.close()}catch(_){}
+  }
+  setDeviceOnline(false);
+  if(showToast) toast("CODBOT 终端已断开");
+}
+async function watchPhysicalDisconnect(p){
+  if(!p.readable)return;
+  try{
+    const reader=p.readable.getReader();
+    serialReader=reader;
+    while(serialPort===p){
+      const result=await reader.read();
+      if(result.done)break;
+    }
+  }catch(e){
+  }finally{
+    if(serialReader){
+      try{serialReader.releaseLock()}catch(_){}
+      serialReader=null;
+    }
+    if(serialPort===p && !manualClosing){
+      serialPort=null;
+      setDeviceOnline(false);
+      toast("CODBOT 终端已断开");
+    }
   }
 }
 async function openSerialPort(p){
   try{
     if(!p.readable&&!p.writable) await p.open({baudRate:115200});
     serialPort=p;
+    manualClosing=false;
     const i=p.getInfo?p.getInfo():{};
     const info=(i.usbVendorId?"CH340 · VID "+i.usbVendorId.toString(16).toUpperCase():"USB 串口")+" · 联调数据同步中";
     setDeviceOnline(true,info);
     demo("green");
     toast("CODBOT 终端已接入");
+    watchPhysicalDisconnect(p);
   }catch(e){
     serialPort=null;
     setDeviceOnline(false);
-    toast("串口连接失败，请关闭占用串口的软件后重试");
+    toast("串口连接失败，请关闭占用 COM 口的软件后重试");
   }
 }
 async function connectDevice(){
+  if(deviceOnline && serialPort){
+    manualClosing=true;
+    await markDisconnected(false);
+    manualClosing=false;
+    toast("已手动断开终端");
+    return;
+  }
   if(!("serial" in navigator)){toast("请使用最新版 Edge 或 Chrome 浏览器");return}
   try{
     const p=await navigator.serial.requestPort({filters:[{usbVendorId:CH340_VID}]});
     await openSerialPort(p);
-  }catch(e){}
+  }catch(e){
+    if(e&&e.name!=="NotFoundError")toast("未能连接终端");
+  }
 }
 async function initSerial(){
   setDeviceOnline(false);
@@ -107,20 +155,23 @@ async function initSerial(){
     const ps=await navigator.serial.getPorts();
     for(const p of ps){
       const i=p.getInfo?p.getInfo():{};
-      if(i.usbVendorId===CH340_VID){await openSerialPort(p);break}
+      if(i.usbVendorId===CH340_VID){
+        await openSerialPort(p);
+        break;
+      }
     }
   }catch(e){}
-  navigator.serial.addEventListener("disconnect",e=>{
-    if(serialPort&&e.target===serialPort){
-      try{serialPort.close()}catch(_){}
-      serialPort=null;
-      setDeviceOnline(false);
-      toast("CODBOT 终端已断开");
+  navigator.serial.addEventListener("disconnect",async e=>{
+    const p=e.port||e.target;
+    if(serialPort && (p===serialPort || !serialPort.readable)){
+      await markDisconnected(true);
     }
   });
   navigator.serial.addEventListener("connect",async e=>{
     if(serialPort)return;
-    const p=e.target,i=p.getInfo?p.getInfo():{};
+    const p=e.port||e.target;
+    if(!p || !p.getInfo)return;
+    const i=p.getInfo();
     if(i.usbVendorId===CH340_VID)await openSerialPort(p);
   });
 }

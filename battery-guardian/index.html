@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>电池卫士监控大屏</title>
+<style>
+body{margin:0;font-family:Microsoft YaHei,sans-serif;background:#03111f;color:#e3f5ff}*{box-sizing:border-box}
+.wrap{padding:12px;max-width:1500px;margin:auto}.head,.panel{border:1px solid #145c8d;background:linear-gradient(180deg,#08203a,#051321)}
+.head{padding:16px 20px;display:flex;justify-content:space-between;align-items:center}.head h1{margin:0;font-size:28px}.muted{color:#87b9d9}
+.grid{display:grid;grid-template-columns:260px 1fr 300px;gap:12px;margin-top:12px}.title{padding:10px 14px;border-bottom:1px solid #145c8d;font-weight:700;color:#9ee5ff}.panel .cnt{padding:12px}
+.btn{display:block;width:100%;padding:12px;margin-bottom:8px;background:#0a2746;color:#d8efff;border:1px solid #176da1;cursor:pointer;text-align:left}.btn.active{background:#0e4c7e}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed rgba(255,255,255,.08)}.mid{display:flex;flex-direction:column;gap:12px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.card{padding:12px;border:1px solid #176da1;background:#08223d}
+.core{display:grid;grid-template-columns:1fr 1fr;min-height:420px}.car{display:flex;align-items:center;justify-content:center;border-right:1px solid #145c8d;position:relative}
+.carbox{width:360px;height:180px;border:3px solid #28d0ff;border-radius:70px 110px 35px 35px;position:relative;box-shadow:0 0 20px rgba(40,208,255,.25)}
+.carbox:before{content:'动力电池 PACK';position:absolute;left:78px;top:62px;width:205px;height:52px;display:flex;align-items:center;justify-content:center;border:2px solid #28d0ff;color:#bdf3ff}
+.wheel{position:absolute;width:54px;height:54px;border:4px solid #1daeff;border-radius:50%;bottom:-30px;background:#03111f}.wl{left:50px}.wr{right:50px}
+.substats{position:absolute;left:12px;right:12px;bottom:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.sub{padding:8px;background:#071a30;border:1px solid #145c8d;text-align:center}.sub b{display:block;color:#22d1ff}
+.diag{padding:16px}.badge{display:inline-block;padding:4px 8px;background:#4d1d2a;color:#ff9db0;border:1px solid #ff6b85;border-radius:12px;font-size:12px}.diag h2{margin:10px 0}
+.reason{background:#0a2847;padding:12px;border-left:3px solid #22d1ff;line-height:1.8}.bar{height:10px;background:#0a243d;border:1px solid #145c8d;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#2ee7a7,#ffd54f,#ff5f73)}
+canvas{width:100%;height:170px;background:#041423;border:1px solid #145c8d;margin-top:14px}.bottom{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.b{padding:18px;text-align:center}.b b{font-size:28px;color:#22d1ff}
+.score{text-align:center;padding:24px 10px}.score b{font-size:58px;color:#ff5f73}
+@media(max-width:1200px){.grid,.core,.bottom,.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div><h1>电池卫士</h1><div class="muted">新能源汽车动力电池数智化诊断预警平台</div></div>
+    <div>在线车辆 <b>128</b>　预警事件 <b style="color:#ffd54f">5</b>　严重事件 <b style="color:#ff5f73">2</b></div>
+  </div>
+  <div class="grid">
+    <div>
+      <div class="panel"><div class="title">故障场景</div><div class="cnt">
+        <button class="btn active" data-k="connect">① 单体电池连接异常</button>
+        <button class="btn" data-k="over">② 动力电池过放电</button>
+        <button class="btn" data-k="thermal">③ 热失控 / 散热失效</button>
+      </div></div>
+      <div class="panel" style="margin-top:12px"><div class="title">车辆状态</div><div class="cnt">
+        <div class="row"><span>车辆编号</span><span>EV-2026-013</span></div>
+        <div class="row"><span>SOC</span><span id="soc">68%</span></div>
+        <div class="row"><span>SOH</span><span id="soh">92%</span></div>
+        <div class="row"><span>总电压</span><span id="tv">356V</span></div>
+        <div class="row"><span>总电流</span><span id="tc">85A</span></div>
+        <div class="row"><span>最高温度</span><span id="temp">35℃</span></div>
+        <div class="row"><span>风险等级</span><span id="lvl">高风险</span></div>
+      </div></div>
+    </div>
+    <div class="mid">
+      <div class="cards">
+        <div class="card"><b>单体连接异常</b><div class="muted">识别连接松动与采样异常</div></div>
+        <div class="card"><b>过放电风险</b><div class="muted">SOC 低 + 总压下跌联合判断</div></div>
+        <div class="card"><b>热安全监控</b><div class="muted">局部温升与温差异常预警</div></div>
+      </div>
+      <div class="panel core">
+        <div class="car">
+          <div class="carbox"><div class="wheel wl"></div><div class="wheel wr"></div></div>
+          <div class="substats">
+            <div class="sub"><b id="minv">3.21V</b><span class="muted">最低单体</span></div>
+            <div class="sub"><b id="ptime">12min</b><span class="muted">提前预警</span></div>
+            <div class="sub"><b id="conf">93%</b><span class="muted">可信度</span></div>
+          </div>
+        </div>
+        <div class="diag">
+          <span class="badge" id="badge">异常预警</span>
+          <h2 id="title">单体电池连接异常</h2>
+          <div class="reason" id="text"></div>
+          <div style="margin-top:14px;display:flex;justify-content:space-between"><span>综合风险指数</span><b id="risk">82</b></div>
+          <div class="bar"><i id="bar" style="width:82%"></i></div>
+          <canvas id="cv" width="520" height="170"></canvas>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="panel b"><b id="b1">3.21V</b><span class="muted">最低单体电压</span></div>
+        <div class="panel b"><b id="b2">35℃</b><span class="muted">最高观测温度</span></div>
+        <div class="panel b"><b id="b3">92%</b><span class="muted">SOH 健康度</span></div>
+        <div class="panel b"><b id="b4">356V</b><span class="muted">当前总电压</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="panel score"><div class="title">单车风险总览</div><div style="padding-top:12px"><b id="rscore">82</b><div id="rtext" class="muted">高风险 / 建议尽快处理</div></div></div>
+      <div class="panel" style="margin-top:12px"><div class="title">今日统计</div><div class="cnt">
+        <div class="row"><span>今日预警总数</span><span>740</span></div>
+        <div class="row"><span>单体电压异常</span><span>241</span></div>
+        <div class="row"><span>过放电预警</span><span>182</span></div>
+        <div class="row"><span>热风险预警</span><span>117</span></div>
+        <div class="row"><span>需立即处理</span><span style="color:#ff5f73">36</span></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+<script>
+const D={
+connect:{soc:'68%',soh:'92%',tv:'356V',tc:'85A',temp:'35℃',lvl:'高风险',minv:'3.21V',ptime:'12min',conf:'93%',badge:'异常预警',title:'单体电池连接异常',text:'单体电池电压出现明显异常波动，变化趋势严重，偏离正常范围，推断为单体电池连接异常故障。',risk:82,rtext:'高风险 / 建议尽快处理',data:[3.62,3.61,3.60,3.58,3.45,3.68,3.31,3.65],unit:'V',b2:'35℃',b4:'356V'},
+over:{soc:'7%',soh:'88%',tv:'286V',tc:'102A',temp:'34℃',lvl:'严重',minv:'2.86V',ptime:'10min',conf:'96%',badge:'严重预警',title:'动力电池过放电',text:'总电压逐渐减低，当 SOC 低于10% 时电压急剧下降。若总电压低于保护电压，推断为动力电池过放电故障。',risk:91,rtext:'严重 / 建议立即补能',data:[350,346,342,337,329,318,304,286],unit:'V',b2:'34℃',b4:'286V'},
+thermal:{soc:'54%',soh:'90%',tv:'348V',tc:'110A',temp:'67℃',lvl:'极高风险',minv:'3.54V',ptime:'5min',conf:'97%',badge:'紧急预警',title:'热失控 / 散热系统失效',text:'动力电池观测点温度变化明显高于正常值，可判断为电池组热失控或者散热系统失效故障。',risk:96,rtext:'极高风险 / 建议立即停车',data:[31,33,35,39,44,52,60,67],unit:'℃',b2:'67℃',b4:'348V'}
+};
+const c=document.getElementById('cv'),x=c.getContext('2d');
+function set(k,v){document.getElementById(k).textContent=v}
+function draw(a,u){
+  let w=c.width,h=c.height;x.clearRect(0,0,w,h);x.fillStyle='#041423';x.fillRect(0,0,w,h);x.strokeStyle='rgba(120,200,255,.15)';
+  for(let i=0;i<5;i++){let y=18+i*(h-36)/4;x.beginPath();x.moveTo(34,y);x.lineTo(w-10,y);x.stroke()}
+  const max=Math.max(...a),min=Math.min(...a),r=(max-min)||1;x.beginPath();
+  a.forEach((v,i)=>{let px=42+i*(w-70)/(a.length-1),py=h-18-((v-min)/r)*(h-42);i?x.lineTo(px,py):x.moveTo(px,py)});
+  x.strokeStyle='#22d1ff';x.lineWidth=3;x.stroke();
+  a.forEach((v,i)=>{let px=42+i*(w-70)/(a.length-1),py=h-18-((v-min)/r)*(h-42);x.beginPath();x.arc(px,py,4,0,6.28);x.fillStyle='#ffd54f';x.fill();x.fillStyle='#bfefff';x.font='12px Microsoft YaHei';x.fillText(v+u,px-12,py-10)})
+}
+function upd(k){
+  let s=D[k];document.querySelectorAll('.btn').forEach(b=>b.classList.toggle('active',b.dataset.k===k));
+  ['soc','soh','tv','tc','temp','lvl','minv','ptime','conf','badge','title','text'].forEach(id=>set(id,s[id]));
+  set('risk',s.risk);document.getElementById('bar').style.width=s.risk+'%';set('b1',s.minv);set('b2',s.b2);set('b3',s.soh);set('b4',s.b4);set('rscore',s.risk);set('rtext',s.rtext);draw(s.data,s.unit)
+}
+document.querySelectorAll('.btn').forEach(b=>b.onclick=()=>upd(b.dataset.k));upd('connect');
+</script>
+</body></html>

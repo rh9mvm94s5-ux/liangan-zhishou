@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1f43">
 <title>粮安智守 · 智能储粮监测平台</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;background:#f4f7fb;color:#15213c}.app{min-height:100vh;display:flex}.side{width:240px;position:fixed;inset:0 auto 0 0;background:linear-gradient(180deg,#0b1f43,#0d356d);color:white;padding:22px 16px;display:flex;flex-direction:column}.brand{display:flex;gap:12px;align-items:center;padding:4px 6px 22px;border-bottom:1px solid #ffffff1d}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#1a79ff,#ff7a16);display:grid;place-items:center;font-size:22px;font-weight:800}.brand b{display:block;font-size:18px}.brand span{font-size:12px;color:#a8caf2}.nav{display:grid;gap:8px;margin-top:18px}.nav button{border:0;background:transparent;color:#bed3f0;border-radius:11px;text-align:left;padding:12px 14px}.nav button.active,.nav button:hover{background:#2d74d8;color:white}.foot{margin-top:auto;border-top:1px solid #ffffff1d;padding-top:16px;font-size:12px;color:#a9c8ef}.main{margin-left:240px;width:calc(100% - 240px)}header{position:sticky;top:0;z-index:5;background:#f4f7fbe8;backdrop-filter:blur(10px);border-bottom:1px solid #dfe8f3;padding:18px 26px;display:flex;align-items:center;justify-content:space-between}h1{margin:3px 0 0;font-size:22px}.ey{font-size:11px;color:#6e86a8;letter-spacing:1.2px;font-weight:700}.tools{display:flex;gap:9px;align-items:center}.tools select,.tools button{border:1px solid #d8e3f0;background:white;border-radius:10px;padding:9px 11px;color:#244267}.pill{background:#fff7df;border:1px solid #edd79b;border-radius:999px;padding:9px 12px;color:#91620b;font-size:12px}.page{display:none;padding:22px 26px}.page.active{display:block}.card{background:white;border:1px solid #e2e9f2;border-radius:16px;box-shadow:0 10px 28px #17365b0e}.hero{padding:20px 22px;display:flex;justify-content:space-between;align-items:center}.hero h2{font-size:30px;margin:6px 0}.muted{color:#76869c;font-size:12px}.orb{width:13px;height:13px;border-radius:50%;display:inline-block;margin-right:10px}.green{background:#39bd79}.yellow{background:#f0b23e}.red{background:#eb5a5a}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:13px}.metric{padding:17px}.metric span{font-size:12px;color:#75869c}.metric b{display:block;font-size:30px;color:#153767;margin-top:8px}.metric small{font-size:12px;color:#8b99ab}.grid{display:grid;grid-template-columns:2fr 1fr;gap:13px;margin-top:13px}.section{padding:18px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.head h3{margin:3px 0;font-size:17px}.legend{font-size:11px;color:#788ba3}.chart{width:100%;height:auto}.risk{display:grid;gap:9px}.risk .item{border:1px solid #e6edf5;border-radius:11px;padding:11px}.risk .item b{font-size:13px}.risk .item p{margin:5px 0 0;color:#7b8ca4;font-size:11px}.sensors{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.sensor{background:#f9fbfe;border:1px solid #e5edf5;border-radius:12px;padding:13px}.sensor.warn{background:#fff9ed;border-color:#f2d89d}.sensor .top{display:flex;justify-content:space-between;color:#58708d;font-size:11px}.sensor strong{display:block;font-size:24px;color:#183968;margin-top:9px}.tag{border-radius:999px;padding:3px 7px;font-size:10px}.tag.g{background:#e8f7ef;color:#247f55}.tag.y{background:#fff0c9;color:#956500}.tag.r{background:#ffe5e5;color:#bd3c3c}.wide{grid-column:1/-1}.table{overflow:auto}.table table{width:100%;border-collapse:collapse;min-width:680px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf1f5;font-size:12px}.table th{background:#f7faff;color:#7889a0}.advice ol{margin:8px 0 0;padding-left:20px;color:#64758e;font-size:12px;line-height:1.8}.pagehead{margin-bottom:13px}.pagehead h2{margin:3px 0 5px}.devices{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.device{padding:17px}.device h3{margin:3px 0}.device p{color:#7b8ca3;font-size:11px;line-height:1.6}.statusline{display:flex;justify-content:space-between;align-items:center}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{border:1px solid #dbe5ef;background:white;border-radius:999px;padding:8px 12px}.settings{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.settings .card{padding:18px}.settings code{display:block;background:#10294e;color:#d9e8ff;padding:9px;border-radius:8px;margin-top:7px;font-size:11px}.footer{padding:18px 26px 28px;color:#99a6b7;font-size:10px;display:flex;justify-content:space-between}.toast{position:fixed;right:22px;bottom:22px;background:#132a4d;color:white;border-radius:10px;padding:10px 13px;opacity:0;transform:translateY(10px);transition:.2s}.toast.show{opacity:1;transform:none}.trend{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .9s ease-out forwards}.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 1.3s infinite}.scan{opacity:.18}@keyframes draw{to{stroke-dashoffset:0}}@keyframes pulse{50%{transform:scale(1.45);opacity:1}}@media(max-width:900px){.side{transform:translateX(-100%)}.main{margin:0;width:100%}.metrics{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.devices{grid-template-columns:repeat(2,1fr)}.sensors{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.metrics,.devices,.settings,.sensors{grid-template-columns:1fr}.tools .pill{display:none}.page{padding:16px}.hero{align-items:flex-start;flex-direction:column;gap:8px}}
+*{box-sizing:border-box}body{margin:0;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;background:#f4f7fb;color:#15213c}.app{min-height:100vh;display:flex}.side{width:240px;position:fixed;inset:0 auto 0 0;background:linear-gradient(180deg,#0b1f43,#0d356d);color:white;padding:22px 16px;display:flex;flex-direction:column}.brand{display:flex;gap:12px;align-items:center;padding:4px 6px 22px;border-bottom:1px solid #ffffff1d}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#1a79ff,#ff7a16);display:grid;place-items:center;font-size:22px;font-weight:800}.brand b{display:block;font-size:18px}.brand span{font-size:12px;color:#a8caf2}.nav{display:grid;gap:8px;margin-top:18px}.nav button{border:0;background:transparent;color:#bed3f0;border-radius:11px;text-align:left;padding:12px 14px}.nav button.active,.nav button:hover{background:#2d74d8;color:white}.foot{margin-top:auto;border-top:1px solid #ffffff1d;padding-top:16px;font-size:12px;color:#a9c8ef}.main{margin-left:240px;width:calc(100% - 240px)}header{position:sticky;top:0;z-index:5;background:#f4f7fbe8;backdrop-filter:blur(10px);border-bottom:1px solid #dfe8f3;padding:18px 26px;display:flex;align-items:center;justify-content:space-between}h1{margin:3px 0 0;font-size:22px}.ey{font-size:11px;color:#6e86a8;letter-spacing:1.2px;font-weight:700}.tools{display:flex;gap:9px;align-items:center}.tools select,.tools button{border:1px solid #d8e3f0;background:white;border-radius:10px;padding:9px 11px;color:#244267}.pill{background:#fff7df;border:1px solid #edd79b;border-radius:999px;padding:9px 12px;color:#91620b;font-size:12px}.pill.device-on{background:#e8f7ef;border-color:#b9e5cd;color:#247f55}.pill.device-off{background:#f5f7fa;border-color:#dce5ef;color:#71839a}.device-strip{margin-bottom:13px;background:#f7f9fc;border:1px solid #dfe7f1;border-radius:13px;padding:12px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center;color:#71839a;font-size:12px}.device-strip b{color:#60738b}.device-strip.on{background:#edf9f2;border-color:#bfe7d0;color:#2d7b57}.device-strip.on b{color:#176b46}.device-strip.off{background:#fff7f7;border-color:#f1d4d8;color:#a76069}.device-strip.off b{color:#914651}.tools button:disabled{opacity:.7;cursor:default}.page{display:none;padding:22px 26px}.page.active{display:block}.card{background:white;border:1px solid #e2e9f2;border-radius:16px;box-shadow:0 10px 28px #17365b0e}.hero{padding:20px 22px;display:flex;justify-content:space-between;align-items:center}.hero h2{font-size:30px;margin:6px 0}.muted{color:#76869c;font-size:12px}.orb{width:13px;height:13px;border-radius:50%;display:inline-block;margin-right:10px}.green{background:#39bd79}.yellow{background:#f0b23e}.red{background:#eb5a5a}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:13px}.metric{padding:17px}.metric span{font-size:12px;color:#75869c}.metric b{display:block;font-size:30px;color:#153767;margin-top:8px}.metric small{font-size:12px;color:#8b99ab}.grid{display:grid;grid-template-columns:2fr 1fr;gap:13px;margin-top:13px}.section{padding:18px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.head h3{margin:3px 0;font-size:17px}.legend{font-size:11px;color:#788ba3}.chart{width:100%;height:auto}.risk{display:grid;gap:9px}.risk .item{border:1px solid #e6edf5;border-radius:11px;padding:11px}.risk .item b{font-size:13px}.risk .item p{margin:5px 0 0;color:#7b8ca4;font-size:11px}.sensors{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.sensor{background:#f9fbfe;border:1px solid #e5edf5;border-radius:12px;padding:13px}.sensor.warn{background:#fff9ed;border-color:#f2d89d}.sensor .top{display:flex;justify-content:space-between;color:#58708d;font-size:11px}.sensor strong{display:block;font-size:24px;color:#183968;margin-top:9px}.tag{border-radius:999px;padding:3px 7px;font-size:10px}.tag.g{background:#e8f7ef;color:#247f55}.tag.y{background:#fff0c9;color:#956500}.tag.r{background:#ffe5e5;color:#bd3c3c}.wide{grid-column:1/-1}.table{overflow:auto}.table table{width:100%;border-collapse:collapse;min-width:680px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf1f5;font-size:12px}.table th{background:#f7faff;color:#7889a0}.advice ol{margin:8px 0 0;padding-left:20px;color:#64758e;font-size:12px;line-height:1.8}.pagehead{margin-bottom:13px}.pagehead h2{margin:3px 0 5px}.devices{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.device{padding:17px}.device h3{margin:3px 0}.device p{color:#7b8ca3;font-size:11px;line-height:1.6}.statusline{display:flex;justify-content:space-between;align-items:center}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{border:1px solid #dbe5ef;background:white;border-radius:999px;padding:8px 12px}.settings{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.settings .card{padding:18px}.settings code{display:block;background:#10294e;color:#d9e8ff;padding:9px;border-radius:8px;margin-top:7px;font-size:11px}.footer{padding:18px 26px 28px;color:#99a6b7;font-size:10px;display:flex;justify-content:space-between}.toast{position:fixed;right:22px;bottom:22px;background:#132a4d;color:white;border-radius:10px;padding:10px 13px;opacity:0;transform:translateY(10px);transition:.2s}.toast.show{opacity:1;transform:none}.trend{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .9s ease-out forwards}.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 1.3s infinite}.scan{opacity:.18}@keyframes draw{to{stroke-dashoffset:0}}@keyframes pulse{50%{transform:scale(1.45);opacity:1}}@media(max-width:900px){.side{transform:translateX(-100%)}.main{margin:0;width:100%}.metrics{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.devices{grid-template-columns:repeat(2,1fr)}.sensors{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.metrics,.devices,.settings,.sensors{grid-template-columns:1fr}.tools .pill{display:none}.page{padding:16px}.hero{align-items:flex-start;flex-direction:column;gap:8px}}
 </style>
 </head>
 <body>
@@ -22,12 +22,13 @@
 <button data-page="advice">✓ 处置建议</button>
 <button data-page="settings">⚙ 系统设置</button>
 </div>
-<div class="foot">● 终端在线<br><span id="heart">正在同步</span></div>
+<div class="foot"><span id="terminalStatus">○ 终端离线</span><br><span id="heart">等待设备接入</span></div>
 </aside>
 <main class="main">
-<header><div><div class="ey">GRAIN STORAGE MONITORING</div><h1 id="title">监控总览</h1></div><div class="tools"><select id="site"><option>1号庭院粮仓</option><option>2号合作社粮仓</option><option>3号家庭农场</option></select><button id="refresh">刷新数据</button><div class="pill">● 演示数据</div></div></header>
+<header><div><div class="ey">GRAIN STORAGE MONITORING</div><h1 id="title">监控总览</h1></div><div class="tools"><select id="site"><option>1号庭院粮仓</option><option>2号合作社粮仓</option><option>3号家庭农场</option></select><button id="connectDevice">连接终端</button><button id="refresh">刷新数据</button><div class="pill device-off" id="devicePill">○ 终端离线</div></div></header>
 
 <section class="page active" id="overview">
+<div id="deviceStrip" class="device-strip off"><b>○ CODBOT 终端未接入</b><span>首次使用请点击右上角“连接终端”，选择 USB-SERIAL CH340</span></div>
 <div class="card hero"><div><span class="muted">当前综合状态</span><h2><i class="orb yellow" id="orb"></i><span id="riskText">关注</span></h2><div class="muted" id="riskDesc">局部测点或环境指标需要加强观察</div></div><div class="muted">数据更新时间<br><b id="time" style="font-size:17px;color:#29496f">--:--:--</b></div></div>
 <div class="metrics">
 <div class="card metric"><span>最高粮温</span><b><em id="maxT" style="font-style:normal">24.8</em><small> ℃</small></b><small id="maxP">探头 03</small></div>
@@ -50,12 +51,80 @@
 <section class="page" id="device"><div class="pagehead"><div class="ey">DEVICE MANAGEMENT</div><h2>设备管理</h2><div class="muted">查看主控、探头、环境节点与通信模块。</div></div><div id="deviceCards" class="devices"></div></section>
 <section class="page" id="advice"><div class="pagehead"><div class="ey">ACTION GUIDANCE</div><h2>处置建议</h2><div class="muted">只提供监测、风险提示与检查建议，不替代人工决策。</div></div><div class="card section advice"><div id="adviceBig"></div></div></section>
 <section class="page" id="settings"><div class="pagehead"><div class="ey">SYSTEM SETTINGS</div><h2>系统设置</h2><div class="muted">预留网页版与微信小程序共用接口。</div></div><div class="settings"><div class="card"><h3>演示状态测试</h3><div class="controls"><button data-demo="green">模拟正常</button><button data-demo="yellow">模拟关注</button><button data-demo="red">模拟预警</button></div></div><div class="card"><h3>接口预留</h3><code>GET /api/realtime?siteId=...</code><code>GET /api/history?siteId=...&hours=24</code><code>GET /api/alerts?siteId=...</code><code>POST /api/alerts/:id/ack</code></div></div></section>
-<div class="footer"><span>粮安智守 · 智能储粮监测平台 V1.1</span><span>动态曲线演示版 · Web / 小程序接口预留</span></div>
+<div class="footer"><span>粮安智守 · 智能储粮监测平台 V1.2</span><span>CODBOT 设备联动 · 联调演示数据 · Web / 小程序接口预留</span></div>
 </main>
 </div><div class="toast" id="toast"></div>
 <script>
 const S={risk:"yellow",env:{t:21.6,h:68.2},s:[["01","上层左侧",22.1,.2,"green"],["02","上层右侧",22.7,.3,"green"],["03","中层核心",24.8,.8,"yellow"],["04","中层边缘",23.2,.4,"green"],["05","下层左侧",21.9,.1,"green"],["06","下层右侧",22.4,.2,"green"]],alarms:[["今天 11:26","持续升温","探头 03","yellow","近 60 分钟升温约 0.8℃"],["今天 09:42","湿度偏高","环境节点","yellow","湿度持续高于 67%RH"],["昨天 18:08","局部温差","探头 02 / 03","red","两测点温差一度扩大至 4.1℃"],["昨天 12:31","通信恢复","控制终端","green","网络恢复，数据补传完成"]]};
-const $=q=>document.querySelector(q),$$=q=>[...document.querySelectorAll(q)],lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
+const $=q=>document.querySelector(q),$=q=>[...document.querySelectorAll(q)],lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
+let deviceOnline=false,serialPort=null;
+const CH340_VID=0x1A86;
+function setDeviceOnline(on,detail){
+  deviceOnline=on;
+  const pill=$("#devicePill"),strip=$("#deviceStrip"),btn=$("#connectDevice"),foot=$("#terminalStatus");
+  if(on){
+    pill.className="pill device-on";pill.textContent="● 终端在线";
+    strip.className="device-strip on";
+    strip.innerHTML="<b>● CODBOT 终端已接入</b><span>"+(detail||"CH340 · USB 串口 · 联调数据同步中")+"</span>";
+    btn.textContent="终端已连接";btn.disabled=true;
+    foot.textContent="● 终端在线";
+    $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 同步";
+  }else{
+    pill.className="pill device-off";pill.textContent="○ 终端离线";
+    strip.className="device-strip off";
+    strip.innerHTML="<b>○ CODBOT 终端未接入</b><span>插入绿色 CODBOT；首次使用点击右上角“连接终端”完成浏览器授权</span>";
+    btn.textContent="连接终端";btn.disabled=false;
+    foot.textContent="○ 终端离线";
+    $("#heart").textContent="等待设备接入";
+  }
+}
+async function openSerialPort(p){
+  try{
+    if(!p.readable&&!p.writable) await p.open({baudRate:115200});
+    serialPort=p;
+    const i=p.getInfo?p.getInfo():{};
+    const info=(i.usbVendorId?"CH340 · VID "+i.usbVendorId.toString(16).toUpperCase():"USB 串口")+" · 联调数据同步中";
+    setDeviceOnline(true,info);
+    demo("green");
+    toast("CODBOT 终端已接入");
+  }catch(e){
+    serialPort=null;
+    setDeviceOnline(false);
+    toast("串口连接失败，请关闭占用串口的软件后重试");
+  }
+}
+async function connectDevice(){
+  if(!("serial" in navigator)){toast("请使用最新版 Edge 或 Chrome 浏览器");return}
+  try{
+    const p=await navigator.serial.requestPort({filters:[{usbVendorId:CH340_VID}]});
+    await openSerialPort(p);
+  }catch(e){}
+}
+async function initSerial(){
+  setDeviceOnline(false);
+  if(!("serial" in navigator))return;
+  try{
+    const ps=await navigator.serial.getPorts();
+    for(const p of ps){
+      const i=p.getInfo?p.getInfo():{};
+      if(i.usbVendorId===CH340_VID){await openSerialPort(p);break}
+    }
+  }catch(e){}
+  navigator.serial.addEventListener("disconnect",e=>{
+    if(serialPort&&e.target===serialPort){
+      try{serialPort.close()}catch(_){}
+      serialPort=null;
+      setDeviceOnline(false);
+      toast("CODBOT 终端已断开");
+    }
+  });
+  navigator.serial.addEventListener("connect",async e=>{
+    if(serialPort)return;
+    const p=e.target,i=p.getInfo?p.getInfo():{};
+    if(i.usbVendorId===CH340_VID)await openSerialPort(p);
+  });
+}
+
 function toast(x){let e=$("#toast");e.textContent=x;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1500)}
 function risk(){if(S.s.some(x=>x[4]=="red"))return"red";if(S.s.some(x=>x[4]=="yellow")||S.env.h>=67)return"yellow";return"green"}
 function sensors(root){root.innerHTML=S.s.map(x=>`<div class="sensor ${x[4]!="green"?"warn":""}"><div class="top"><span>探头 ${x[0]} · ${x[1]}</span><span class="tag ${x[4][0]}">${lab(x[4])}</span></div><strong>${x[2].toFixed(1)} ℃</strong><small class="muted">1小时变化 ${x[3]>=0?"+":""}${x[3].toFixed(1)}℃</small></div>`).join("")}
@@ -66,9 +135,10 @@ function advice(root){let r=risk(),arr=r=="red"?["优先现场复核红色预警
 function render(){let r=risk(),m=S.s.reduce((a,b)=>a[2]>b[2]?a:b);$("#orb").className="orb "+r;$("#riskText").textContent=lab(r);$("#riskDesc").textContent=r=="red"?"存在高风险异常，请尽快现场复核":r=="yellow"?"局部测点或环境指标需要加强观察":"当前各项指标稳定，保持正常监测";$("#time").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false});$("#maxT").textContent=m[2].toFixed(1);$("#maxP").textContent="探头 "+m[0];$("#envT").textContent=S.env.t.toFixed(1);$("#hum").textContent=S.env.h.toFixed(1);$("#abn").textContent=S.s.filter(x=>x[4]!="green").length;sensors($("#sensorGrid"));sensors($("#sensorGrid2"));$("#riskList").innerHTML=[["环境湿度",S.env.h>=67?"yellow":"green",S.env.h.toFixed(1)+"%RH"],["局部粮温",m[2]>=27?"red":m[2]>=24?"yellow":"green",m[2].toFixed(1)+"℃ · 探头 "+m[0]],["变化趋势",S.s.some(x=>x[3]>=.7)?"yellow":"green","同时参考持续升温与测点差异"],["通信状态","green","控制终端在线，数据同步正常"]].map(x=>`<div class="item"><b><i class="orb ${x[1]}" style="width:9px;height:9px"></i>${x[0]}</b><p>${x[2]}</p></div>`).join("");advice($("#adviceBox"));advice($("#adviceBig"));alarms("#alarmRows");alarms("#alarmRows2");chart($("#chart1"),900,320,24);chart($("#chart2"),1200,420,40);$("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 同步"}
 function demo(r){S.s.forEach(x=>x[4]="green");if(r=="green"){S.s[2][2]=22.6;S.s[2][3]=.2;S.env.h=61.8}else if(r=="yellow"){S.s[2][2]=24.8;S.s[2][3]=.8;S.s[2][4]="yellow";S.env.h=68.2}else{S.s[2][2]=29.6;S.s[2][3]=1.6;S.s[2][4]="red";S.env.h=74.1}render();toast("已切换为"+lab(r)+"演示状态")}
 $$(".nav button").forEach(b=>b.onclick=()=>{$$(".nav button").forEach(x=>x.classList.toggle("active",x==b));$$(".page").forEach(x=>x.classList.toggle("active",x.id==b.dataset.page));$("#title").textContent=b.textContent.trim().replace(/^[^\u4e00-\u9fa5]+/,"")});
-$$("[data-demo]").forEach(b=>b.onclick=()=>demo(b.dataset.demo));
+$("[data-demo]").forEach(b=>b.onclick=()=>demo(b.dataset.demo));
+$("#connectDevice").onclick=connectDevice;
 $("#refresh").onclick=()=>{S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();toast("数据已刷新")};
 $("#site").onchange=e=>toast("已切换到 "+e.target.value);
-render();setInterval(()=>{$("#refresh").click()},5000);
+render();initSerial();setInterval(()=>{if(deviceOnline)$("#refresh").click()},5000);
 </script>
 <link rel="stylesheet" href="/__host/pageshare-free-plan-overlay.css" data-pageshare-free-plan-overlay=""><a id="__pageshare-free-plan-overlay" href="https://pageshare.ai?utm_source=free_plan_overlay" target="_blank" rel="noopener noreferrer" title="Hosted by Pageshare.ai" aria-label="Hosted by Pageshare.ai" data-pageshare-free-plan-overlay=""><img src="/__host/pageshare-free-plan-overlay.svg" width="48" height="48" alt="PageShare.ai badge" decoding="async" loading="lazy"></a></body></html>

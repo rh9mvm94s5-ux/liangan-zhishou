@@ -56,7 +56,7 @@
 </div><div class="toast" id="toast"></div>
 <script>
 const S={risk:"yellow",env:{t:21.6,h:68.2},s:[["01","上层左侧",22.1,.2,"green"],["02","上层右侧",22.7,.3,"green"],["03","中层核心",24.8,.8,"yellow"],["04","中层边缘",23.2,.4,"green"],["05","下层左侧",21.9,.1,"green"],["06","下层右侧",22.4,.2,"green"]],alarms:[["今天 11:26","持续升温","探头 03","yellow","近 60 分钟升温约 0.8℃"],["今天 09:42","湿度偏高","环境节点","yellow","湿度持续高于 67%RH"],["昨天 18:08","局部温差","探头 02 / 03","red","两测点温差一度扩大至 4.1℃"],["昨天 12:31","通信恢复","控制终端","green","网络恢复，数据补传完成"]]};
-const $=q=>document.querySelector(q),$=q=>[...document.querySelectorAll(q)],lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
+const $=q=>document.querySelector(q),qsa=q=>Array.from(document.querySelectorAll(q)),lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
 let deviceOnline=false,serialPort=null,serialReader=null,manualClosing=false;
 const CH340_VID=0x1A86;
 function setDeviceOnline(on,detail){
@@ -185,8 +185,8 @@ function alarms(id){$(id).innerHTML=S.alarms.map(a=>`<tr><td>${a[0]}</td><td>${a
 function advice(root){let r=risk(),arr=r=="red"?["优先现场复核红色预警测点。","检查局部发热、返潮、结露及通风条件。","结合人工判断决定是否采取通风或进一步检测。"]:r=="yellow"?["复核最高粮温测点并观察后续变化。","检查环境湿度及粮堆表层是否存在结露、返潮。","保持通风条件可用，避免高湿环境下盲目长时间通风。"]:["保持当前巡检频率。","定期检查探头与线缆。","保留历史数据用于趋势对比。"];root.innerHTML=`<h3><i class="orb ${r}"></i>${lab(r)}状态</h3><ol>${arr.map(x=>"<li>"+x+"</li>").join("")}</ol>`}
 function render(){let r=risk(),m=S.s.reduce((a,b)=>a[2]>b[2]?a:b);$("#orb").className="orb "+r;$("#riskText").textContent=lab(r);$("#riskDesc").textContent=r=="red"?"存在高风险异常，请尽快现场复核":r=="yellow"?"局部测点或环境指标需要加强观察":"当前各项指标稳定，保持正常监测";$("#time").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false});$("#maxT").textContent=m[2].toFixed(1);$("#maxP").textContent="探头 "+m[0];$("#envT").textContent=S.env.t.toFixed(1);$("#hum").textContent=S.env.h.toFixed(1);$("#abn").textContent=S.s.filter(x=>x[4]!="green").length;sensors($("#sensorGrid"));sensors($("#sensorGrid2"));$("#riskList").innerHTML=[["环境湿度",S.env.h>=67?"yellow":"green",S.env.h.toFixed(1)+"%RH"],["局部粮温",m[2]>=27?"red":m[2]>=24?"yellow":"green",m[2].toFixed(1)+"℃ · 探头 "+m[0]],["变化趋势",S.s.some(x=>x[3]>=.7)?"yellow":"green","同时参考持续升温与测点差异"],["通信状态","green","控制终端在线，数据同步正常"]].map(x=>`<div class="item"><b><i class="orb ${x[1]}" style="width:9px;height:9px"></i>${x[0]}</b><p>${x[2]}</p></div>`).join("");advice($("#adviceBox"));advice($("#adviceBig"));alarms("#alarmRows");alarms("#alarmRows2");chart($("#chart1"),900,320,24);chart($("#chart2"),1200,420,40);$("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 同步"}
 function demo(r){S.s.forEach(x=>x[4]="green");if(r=="green"){S.s[2][2]=22.6;S.s[2][3]=.2;S.env.h=61.8}else if(r=="yellow"){S.s[2][2]=24.8;S.s[2][3]=.8;S.s[2][4]="yellow";S.env.h=68.2}else{S.s[2][2]=29.6;S.s[2][3]=1.6;S.s[2][4]="red";S.env.h=74.1}render();toast("已切换为"+lab(r)+"演示状态")}
-$$(".nav button").forEach(b=>b.onclick=()=>{$$(".nav button").forEach(x=>x.classList.toggle("active",x==b));$$(".page").forEach(x=>x.classList.toggle("active",x.id==b.dataset.page));$("#title").textContent=b.textContent.trim().replace(/^[^\u4e00-\u9fa5]+/,"")});
-$("[data-demo]").forEach(b=>b.onclick=()=>demo(b.dataset.demo));
+qsa(".nav button").forEach(b=>b.onclick=()=>{qsa(".nav button").forEach(x=>x.classList.toggle("active",x==b));qsa(".page").forEach(x=>x.classList.toggle("active",x.id==b.dataset.page));$("#title").textContent=b.textContent.trim().replace(/^[^\u4e00-\u9fa5]+/,"")});
+qsa("[data-demo]").forEach(b=>b.onclick=()=>demo(b.dataset.demo));
 $("#connectDevice").onclick=connectDevice;
 $("#refresh").onclick=()=>{S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();toast("数据已刷新")};
 $("#site").onchange=e=>toast("已切换到 "+e.target.value);

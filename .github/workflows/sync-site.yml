@@ -1,0 +1,30 @@
+name: Sync Grain Monitor Site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download current site
+        run: |
+          curl -L --fail --retry 3 "https://silver-lantern-4930.hosted.pageshare.ai" -o index.html
+          touch .nojekyll
+
+      - name: Commit site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .nojekyll
+          git commit -m "Publish 粮安智守 web monitor" || exit 0
+          git push

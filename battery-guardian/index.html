@@ -3,114 +3,286 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>电池卫士监控大屏</title>
+<title>电池卫士｜新能源汽车动力电池数智化诊断预警</title>
 <style>
-body{margin:0;font-family:Microsoft YaHei,sans-serif;background:#03111f;color:#e3f5ff}*{box-sizing:border-box}
-.wrap{padding:12px;max-width:1500px;margin:auto}.head,.panel{border:1px solid #145c8d;background:linear-gradient(180deg,#08203a,#051321)}
-.head{padding:16px 20px;display:flex;justify-content:space-between;align-items:center}.head h1{margin:0;font-size:28px}.muted{color:#87b9d9}
-.grid{display:grid;grid-template-columns:260px 1fr 300px;gap:12px;margin-top:12px}.title{padding:10px 14px;border-bottom:1px solid #145c8d;font-weight:700;color:#9ee5ff}.panel .cnt{padding:12px}
-.btn{display:block;width:100%;padding:12px;margin-bottom:8px;background:#0a2746;color:#d8efff;border:1px solid #176da1;cursor:pointer;text-align:left}.btn.active{background:#0e4c7e}
-.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed rgba(255,255,255,.08)}.mid{display:flex;flex-direction:column;gap:12px}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.card{padding:12px;border:1px solid #176da1;background:#08223d}
-.core{display:grid;grid-template-columns:1fr 1fr;min-height:420px}.car{display:flex;align-items:center;justify-content:center;border-right:1px solid #145c8d;position:relative}
-.carbox{width:360px;height:180px;border:3px solid #28d0ff;border-radius:70px 110px 35px 35px;position:relative;box-shadow:0 0 20px rgba(40,208,255,.25)}
-.carbox:before{content:'动力电池 PACK';position:absolute;left:78px;top:62px;width:205px;height:52px;display:flex;align-items:center;justify-content:center;border:2px solid #28d0ff;color:#bdf3ff}
-.wheel{position:absolute;width:54px;height:54px;border:4px solid #1daeff;border-radius:50%;bottom:-30px;background:#03111f}.wl{left:50px}.wr{right:50px}
-.substats{position:absolute;left:12px;right:12px;bottom:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.sub{padding:8px;background:#071a30;border:1px solid #145c8d;text-align:center}.sub b{display:block;color:#22d1ff}
-.diag{padding:16px}.badge{display:inline-block;padding:4px 8px;background:#4d1d2a;color:#ff9db0;border:1px solid #ff6b85;border-radius:12px;font-size:12px}.diag h2{margin:10px 0}
-.reason{background:#0a2847;padding:12px;border-left:3px solid #22d1ff;line-height:1.8}.bar{height:10px;background:#0a243d;border:1px solid #145c8d;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#2ee7a7,#ffd54f,#ff5f73)}
-canvas{width:100%;height:170px;background:#041423;border:1px solid #145c8d;margin-top:14px}.bottom{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.b{padding:18px;text-align:center}.b b{font-size:28px;color:#22d1ff}
-.score{text-align:center;padding:24px 10px}.score b{font-size:58px;color:#ff5f73}
-@media(max-width:1200px){.grid,.core,.bottom,.cards{grid-template-columns:1fr}}
+:root{
+  --bg:#041126;--panel:#08264a;--panel2:#061d39;--line:#1688d8;--cyan:#22d7ff;
+  --text:#dff4ff;--muted:#87abc7;--green:#36e0a0;--yellow:#ffd447;--orange:#ff8a3d;--red:#ff4f68;
+}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;color:var(--text);background:
+radial-gradient(circle at 55% 32%,rgba(0,104,190,.30),transparent 33%),
+linear-gradient(180deg,#06182e 0,#020a15 100%)}
+.dashboard{height:100vh;min-width:1280px;display:grid;grid-template-columns:64px 250px minmax(650px,1fr) 288px;grid-template-rows:64px minmax(430px,1fr) 156px;gap:8px;padding:8px}
+.glow{box-shadow:0 0 18px rgba(30,185,255,.12),inset 0 0 25px rgba(0,134,220,.08)}
+.panel{position:relative;border:1px solid rgba(37,148,217,.58);background:linear-gradient(180deg,rgba(6,38,75,.94),rgba(4,22,43,.96));overflow:hidden}
+.panel:before,.panel:after{content:"";position:absolute;width:20px;height:2px;background:var(--cyan);opacity:.75}
+.panel:before{left:0;top:0}.panel:after{right:0;bottom:0}
+.p-title{height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid rgba(32,131,199,.35);font-size:14px;font-weight:700;letter-spacing:.5px}
+.p-title small{font-size:11px;color:var(--muted);font-weight:400}
+.header{grid-column:1/5;display:grid;grid-template-columns:310px 1fr 300px;align-items:center;border:1px solid rgba(39,151,220,.62);background:linear-gradient(180deg,rgba(9,43,84,.96),rgba(4,24,47,.95));position:relative}
+.header:after{content:"";position:absolute;left:35%;right:35%;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.brand{display:flex;align-items:center;padding-left:14px;gap:12px}
+.logo{width:42px;height:42px;border:3px solid #159cff;border-radius:50%;position:relative;box-shadow:0 0 16px rgba(34,215,255,.55)}
+.logo:before{content:"";position:absolute;inset:8px;border:3px solid #22d7ff;border-bottom-color:transparent;border-radius:50%}
+.logo:after{content:"";position:absolute;width:22px;height:8px;background:#061b34;left:7px;bottom:-4px;border-top:3px solid #22d7ff}
+.brand h1{margin:0;font-size:23px;letter-spacing:2px}.brand p{margin:2px 0 0;font-size:11px;color:#73badf}
+.top-tabs{justify-self:center;width:460px;height:38px;display:flex;align-items:center;justify-content:center;gap:34px;
+clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(24,112,180,.65),rgba(8,44,86,.82));border-top:1px solid #29c9ff}
+.top-tabs span{font-size:12px;color:#88c9e8}.top-tabs span.active{color:#28dfff;text-shadow:0 0 10px #28dfff}
+.head-alert{justify-self:end;margin-right:10px;height:40px;display:flex;border:1px solid rgba(255,210,57,.58)}
+.head-alert div{min-width:138px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;background:rgba(71,57,14,.22)}
+.head-alert div+div{border-left:1px solid rgba(255,210,57,.45)}.head-alert b{font-size:18px;color:var(--yellow)}
+.nav{grid-column:1;grid-row:2/4;display:flex;flex-direction:column;gap:4px}
+.nav button{flex:1;min-height:38px;border:1px solid rgba(27,108,168,.42);background:linear-gradient(180deg,#0b3158,#092442);color:#b6d4e8;font-size:12px;cursor:pointer;padding:0}
+.nav button.active{background:linear-gradient(180deg,#1675c3,#0b4f91);color:white;border-color:#22baff;box-shadow:0 0 12px rgba(27,180,255,.28) inset}
+.leftcol{grid-column:2;grid-row:2/4;display:grid;grid-template-rows:118px minmax(270px,1fr) 172px;gap:8px}
+.weather{padding:8px 12px}.weather-tabs{font-size:12px;display:flex;gap:14px;color:#d7ecf9;font-weight:700;margin-bottom:8px}
+.weather-main{display:flex;justify-content:space-between;align-items:center}.weather-main .place{font-size:12px;color:#bdd5e5}.temp{font-size:24px}.cloud{font-size:35px;filter:drop-shadow(0 0 5px rgba(255,218,61,.35))}
+.table-wrap{padding:8px 10px}.mini-table{width:100%;border-collapse:collapse;font-size:11px}.mini-table th,.mini-table td{padding:6px 3px;text-align:center;border-bottom:1px solid rgba(77,148,195,.18)}
+.mini-table th{color:#9fc7df;font-weight:500}.mini-table tr.hot td{color:#ffca59}
+.live-box{height:122px;margin:10px;position:relative;background:linear-gradient(180deg,#123456,#091b2f);overflow:hidden;border:1px solid rgba(39,154,217,.4)}
+.road{position:absolute;left:-10%;right:-10%;bottom:15px;height:52px;background:#1d3141;transform:skewX(-12deg)}
+.road:after{content:"";position:absolute;left:0;right:0;top:24px;border-top:3px dashed rgba(255,255,255,.35)}
+.car-mini{position:absolute;left:42px;bottom:40px;width:138px;height:50px;background:linear-gradient(180deg,#19baff,#07518b);border-radius:16px 26px 7px 7px;box-shadow:0 0 18px rgba(41,206,255,.35)}
+.car-mini:before,.car-mini:after{content:"";position:absolute;bottom:-10px;width:24px;height:24px;border-radius:50%;background:#07101b;border:4px solid #6b8494}
+.car-mini:before{left:20px}.car-mini:after{right:20px}.live-label{position:absolute;left:8px;top:8px;font-size:11px;color:#e8f6ff;background:rgba(0,0,0,.42);padding:4px 7px}
+.center{grid-column:3;grid-row:2;display:flex;flex-direction:column}
+.scenario-tabs{position:absolute;right:12px;top:7px;display:flex;gap:6px;z-index:5}
+.scenario-tabs button{font-size:11px;color:#8ec7e8;background:#082845;border:1px solid #176aa4;padding:4px 8px;cursor:pointer}
+.scenario-tabs button.active{color:white;border-color:#21d2ff;background:#0d5d98}
+.core-map{position:relative;flex:1;min-height:0;background:
+radial-gradient(circle at 48% 45%,rgba(0,82,154,.28),transparent 42%),
+linear-gradient(110deg,transparent 48%,rgba(0,106,197,.30) 49%,rgba(0,106,197,.30) 50%,transparent 51%),
+linear-gradient(32deg,transparent 48%,rgba(0,91,184,.25) 49%,rgba(0,91,184,.25) 50%,transparent 51%),
+#06152d;overflow:hidden}
+.core-map:before{content:"";position:absolute;inset:0;opacity:.26;background-image:
+linear-gradient(rgba(31,109,177,.28) 1px,transparent 1px),linear-gradient(90deg,rgba(31,109,177,.28) 1px,transparent 1px);background-size:42px 42px}
+.roadline{position:absolute;height:5px;background:#0f5fff;box-shadow:0 0 8px rgba(36,105,255,.7);transform-origin:left center;border-radius:4px;opacity:.7}
+.r1{left:5%;top:62%;width:82%;transform:rotate(-9deg)}.r2{left:12%;top:28%;width:66%;transform:rotate(17deg)}.r3{left:35%;top:8%;width:5px;height:82%;transform:rotate(3deg)}.r4{left:10%;top:78%;width:72%;transform:rotate(7deg)}.r5{left:52%;top:22%;width:46%;transform:rotate(-25deg)}
+.map-tools{position:absolute;left:18px;top:78px;display:flex;flex-direction:column;gap:7px;z-index:3}
+.map-tools button{width:38px;height:38px;border:1px solid rgba(67,157,215,.4);background:rgba(10,44,79,.9);color:#dff4ff;font-size:11px;border-radius:6px;box-shadow:0 0 8px rgba(0,160,255,.12)}
+.marker{position:absolute;width:34px;height:42px;z-index:3}
+.marker .ico{width:30px;height:30px;border:3px solid #21e1ff;border-radius:7px;background:#0c416c;display:flex;align-items:center;justify-content:center;color:#21e1ff;font-size:18px;box-shadow:0 0 12px rgba(33,225,255,.45)}
+.marker .stem{width:2px;height:11px;background:#21e1ff;margin:auto}.marker.warn .ico{border-color:#ff9e2f;color:#ff9e2f}.marker.danger .ico{border-color:#ff23d0;color:#ff23d0}
+.m1{left:31%;top:22%}.m2{left:57%;top:42%}.m3{left:71%;top:18%}.m4{left:24%;top:65%}.m5{left:78%;top:67%}.m6{left:47%;top:74%}
+.car-pack{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:390px;height:180px;z-index:2;filter:drop-shadow(0 0 18px rgba(27,202,255,.25))}
+.pack-body{position:absolute;left:52px;right:52px;top:55px;height:75px;border:2px solid #20d9ff;border-radius:8px;background:rgba(5,57,99,.55);display:grid;grid-template-columns:repeat(8,1fr);gap:5px;padding:9px}
+.cell{border:1px solid #12a8ff;background:linear-gradient(180deg,#0d73be,#083a69);box-shadow:0 0 8px rgba(27,196,255,.12)}
+.cell.bad{background:linear-gradient(180deg,#ff8f29,#7a3511);border-color:#ffb044}.cell.hot{background:linear-gradient(180deg,#ff286d,#721337);border-color:#ff4c82}
+.car-outline{position:absolute;inset:0;border:2px solid rgba(62,213,255,.7);clip-path:polygon(4% 70%,12% 48%,24% 42%,34% 18%,67% 18%,82% 42%,94% 48%,98% 70%,91% 75%,80% 75%,75% 88%,66% 88%,61% 75%,37% 75%,31% 88%,22% 88%,17% 75%,8% 75%)}
+.float-card{position:absolute;right:82px;top:94px;width:235px;z-index:4;background:rgba(7,26,46,.93);border:1px solid #4aa1d4;padding:9px 10px;font-size:11px;line-height:1.65;box-shadow:0 0 14px rgba(0,150,255,.14)}
+.float-card:before{content:"";position:absolute;left:-52px;top:50%;width:52px;height:1px;background:#4aa1d4}.float-card h3{font-size:13px;margin:0 0 5px;color:#f4fbff}.float-card b{color:var(--yellow)}
+.map-bottom-label{position:absolute;left:0;right:0;bottom:0;height:25px;text-align:center;color:#6fa7ca;font-size:10px;letter-spacing:2px}
+.rightcol{grid-column:4;grid-row:2;display:grid;grid-template-rows:124px 144px 1fr;gap:8px}
+.coverage{padding:12px;display:flex;align-items:center;justify-content:space-around}.battery-icon{width:46px;height:64px;border:2px solid #5ac9ff;position:relative}.battery-icon:before{content:"";position:absolute;width:18px;height:5px;left:12px;top:-7px;background:#5ac9ff}
+.battery-icon i{position:absolute;left:5px;right:5px;bottom:5px;height:80%;background:linear-gradient(180deg,#ff5757,#ff9f35);box-shadow:0 0 12px rgba(255,96,67,.25)}
+.coverage .num{font-size:33px;color:#ff5454;font-weight:800}.coverage .num small{font-size:13px;color:#dbefff}
+.counter-row{display:flex;align-items:center;gap:12px;padding:10px 12px}.digits{display:flex;gap:3px}.digits span{width:27px;height:38px;border:2px solid #e84f74;color:white;background:#082441;display:flex;align-items:center;justify-content:center;font-size:25px}
+.digits.green span{border-color:#1bcf94}.counter-txt{font-size:11px;color:#b7d4e7}.counter-txt b{display:block;color:#fff;font-size:12px;margin-bottom:3px}
+.risk-circles{display:flex;align-items:center;justify-content:center;gap:18px;padding-top:18px}.circle{width:100px;height:100px;border:2px solid #1cccf0;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.circle span{font-size:11px;color:#aecde1}.circle b{font-size:30px;color:#ffdd4c}.circle small{font-size:10px;color:#9ab8ca}.compare{position:absolute;bottom:10px;left:12px;right:12px;text-align:center;font-size:10px;color:#74c1e4}
+.bottom{grid-column:3/5;grid-row:3;display:grid;grid-template-columns:1.05fr 1fr 1fr .7fr;gap:8px}
+.bpanel{min-width:0}.donuts{height:108px;display:flex;justify-content:space-around;align-items:center}.donut{--p:75;width:72px;height:72px;border-radius:50%;background:conic-gradient(#e9486a calc(var(--p)*1%),#16324b 0);display:flex;align-items:center;justify-content:center;position:relative}
+.donut:after{content:"";width:49px;height:49px;background:#071a30;border-radius:50%;position:absolute}.donut b{z-index:1;font-size:10px;text-align:center}.donut.c2{background:conic-gradient(#34dbce calc(var(--p)*1%),#16324b 0)}.donut.c3{background:conic-gradient(#8c52f4 calc(var(--p)*1%),#16324b 0)}
+.chartbox{height:104px;padding:5px 10px}canvas{width:100%;height:100%}.spark{width:100%;height:100%}
+.gauge{display:flex;align-items:center;justify-content:center;height:107px;position:relative}.semi{width:116px;height:58px;border:10px solid #0d4f80;border-bottom:0;border-radius:116px 116px 0 0;position:relative}
+.semi:after{content:"";position:absolute;width:3px;height:47px;background:#2ee5ff;left:50%;bottom:-1px;transform-origin:bottom;transform:rotate(32deg);box-shadow:0 0 8px #2ee5ff}.semi b{position:absolute;left:0;right:0;text-align:center;bottom:-35px;font-size:14px;color:#c9efff}
+.note{position:absolute;right:12px;bottom:7px;color:#6da7ca;font-size:9px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="head">
-    <div><h1>电池卫士</h1><div class="muted">新能源汽车动力电池数智化诊断预警平台</div></div>
-    <div>在线车辆 <b>128</b>　预警事件 <b style="color:#ffd54f">5</b>　严重事件 <b style="color:#ff5f73">2</b></div>
-  </div>
-  <div class="grid">
-    <div>
-      <div class="panel"><div class="title">故障场景</div><div class="cnt">
-        <button class="btn active" data-k="connect">① 单体电池连接异常</button>
-        <button class="btn" data-k="over">② 动力电池过放电</button>
-        <button class="btn" data-k="thermal">③ 热失控 / 散热失效</button>
-      </div></div>
-      <div class="panel" style="margin-top:12px"><div class="title">车辆状态</div><div class="cnt">
-        <div class="row"><span>车辆编号</span><span>EV-2026-013</span></div>
-        <div class="row"><span>SOC</span><span id="soc">68%</span></div>
-        <div class="row"><span>SOH</span><span id="soh">92%</span></div>
-        <div class="row"><span>总电压</span><span id="tv">356V</span></div>
-        <div class="row"><span>总电流</span><span id="tc">85A</span></div>
-        <div class="row"><span>最高温度</span><span id="temp">35℃</span></div>
-        <div class="row"><span>风险等级</span><span id="lvl">高风险</span></div>
-      </div></div>
-    </div>
-    <div class="mid">
-      <div class="cards">
-        <div class="card"><b>单体连接异常</b><div class="muted">识别连接松动与采样异常</div></div>
-        <div class="card"><b>过放电风险</b><div class="muted">SOC 低 + 总压下跌联合判断</div></div>
-        <div class="card"><b>热安全监控</b><div class="muted">局部温升与温差异常预警</div></div>
+<div class="dashboard">
+  <header class="header glow">
+    <div class="brand"><div class="logo"></div><div><h1>电池卫士</h1><p>新能源汽车动力电池数智化诊断预警平台</p></div></div>
+    <div class="top-tabs"><span class="active">单车监测</span><span>|</span><span>故障预测</span><span>|</span><span>车辆档案</span></div>
+    <div class="head-alert"><div>一般事件 <b id="normalEvent">0</b></div><div>严重故障 <b id="severeEvent">3</b></div></div>
+  </header>
+
+  <nav class="nav">
+    <button>全部</button><button>车队总览</button><button>车辆档案</button><button class="active">电池监控</button>
+    <button>电压监测</button><button>温度监测</button><button>故障预警</button><button>SOC</button><button>SOH</button><button>维修记录</button><button>数据中心</button>
+  </nav>
+
+  <section class="leftcol">
+    <div class="panel glow">
+      <div class="weather">
+        <div class="weather-tabs"><span>环境工况</span><span>实时温度</span><span>温度预测</span></div>
+        <div class="weather-main"><div><div class="place">长春市　2026年9月22日</div><div style="margin-top:8px"><span class="cloud">🌤️</span> <span class="temp">15℃</span> <span style="font-size:11px;color:#b9d1e1">多云</span></div></div><div style="font-size:10px;color:#8eb5ce">空气质量 良</div></div>
       </div>
-      <div class="panel core">
-        <div class="car">
-          <div class="carbox"><div class="wheel wl"></div><div class="wheel wr"></div></div>
-          <div class="substats">
-            <div class="sub"><b id="minv">3.21V</b><span class="muted">最低单体</span></div>
-            <div class="sub"><b id="ptime">12min</b><span class="muted">提前预警</span></div>
-            <div class="sub"><b id="conf">93%</b><span class="muted">可信度</span></div>
-          </div>
+    </div>
+
+    <div class="panel glow">
+      <div class="p-title"><span>单车 BMS 监控</span><small id="updateTime">14:25 更新</small></div>
+      <div class="table-wrap">
+        <table class="mini-table">
+          <thead><tr><th>参数</th><th>当前值</th><th>状态</th></tr></thead>
+          <tbody id="bmsTable">
+            <tr><td>SOC</td><td id="tSoc">68%</td><td>正常</td></tr>
+            <tr><td>SOH</td><td id="tSoh">92%</td><td>良好</td></tr>
+            <tr><td>总电压</td><td id="tVolt">356V</td><td>正常</td></tr>
+            <tr><td>总电流</td><td id="tCurrent">85A</td><td>正常</td></tr>
+            <tr class="hot"><td>最低单体</td><td id="tCell">3.21V</td><td id="tCellState">异常</td></tr>
+            <tr><td>最高温度</td><td id="tTemp">35℃</td><td id="tTempState">正常</td></tr>
+            <tr><td>绝缘状态</td><td>685kΩ</td><td>正常</td></tr>
+            <tr><td>采样完整率</td><td>98.0%</td><td>正常</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel glow">
+      <div class="p-title"><span>车辆实时监控</span><small>● 在线</small></div>
+      <div class="live-box"><div class="road"></div><div class="car-mini"></div><div class="live-label">EV-2026-013 · 电池包在线</div></div>
+    </div>
+  </section>
+
+  <main class="panel center glow">
+    <div class="p-title"><span>单车动力电池实时诊断</span><small>车辆 EV-2026-013</small></div>
+    <div class="scenario-tabs">
+      <button class="active" data-k="connect">单体连接异常</button>
+      <button data-k="over">过放电</button>
+      <button data-k="thermal">热失控 / 散热失效</button>
+    </div>
+    <div class="core-map">
+      <div class="roadline r1"></div><div class="roadline r2"></div><div class="roadline r3"></div><div class="roadline r4"></div><div class="roadline r5"></div>
+      <div class="map-tools"><button>电压</button><button>总压</button><button>温度</button><button>诊断</button><button>定位</button></div>
+
+      <div class="marker m1"><div class="ico">▣</div><div class="stem"></div></div>
+      <div class="marker m2 warn"><div class="ico">▣</div><div class="stem"></div></div>
+      <div class="marker m3"><div class="ico">▣</div><div class="stem"></div></div>
+      <div class="marker m4 warn"><div class="ico">▣</div><div class="stem"></div></div>
+      <div class="marker m5"><div class="ico">▣</div><div class="stem"></div></div>
+      <div class="marker m6 danger"><div class="ico">▣</div><div class="stem"></div></div>
+
+      <div class="car-pack">
+        <div class="car-outline"></div>
+        <div class="pack-body" id="packCells">
+          <i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><i class="cell bad"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i>
         </div>
-        <div class="diag">
-          <span class="badge" id="badge">异常预警</span>
-          <h2 id="title">单体电池连接异常</h2>
-          <div class="reason" id="text"></div>
-          <div style="margin-top:14px;display:flex;justify-content:space-between"><span>综合风险指数</span><b id="risk">82</b></div>
-          <div class="bar"><i id="bar" style="width:82%"></i></div>
-          <canvas id="cv" width="520" height="170"></canvas>
-        </div>
       </div>
-      <div class="bottom">
-        <div class="panel b"><b id="b1">3.21V</b><span class="muted">最低单体电压</span></div>
-        <div class="panel b"><b id="b2">35℃</b><span class="muted">最高观测温度</span></div>
-        <div class="panel b"><b id="b3">92%</b><span class="muted">SOH 健康度</span></div>
-        <div class="panel b"><b id="b4">356V</b><span class="muted">当前总电压</span></div>
+
+      <div class="float-card">
+        <h3 id="faultTitle">单体电池连接异常</h3>
+        <div>车辆编号：<b>EV-2026-013</b></div>
+        <div>预测可信度：<b id="confidence">93%</b></div>
+        <div>风险指数：<b id="riskScore">82</b></div>
+        <div>预计预警时间：<b id="predictTime">12 min</b></div>
+        <div style="margin-top:4px;color:#cbe5f4" id="faultText">单体电池电压出现明显异常波动，变化趋势严重偏离正常范围，推断为单体电池连接异常故障。</div>
+      </div>
+      <div class="map-bottom-label">PACK DIGITAL TWIN · BATTERY GUARDIAN · REAL-TIME DIAGNOSIS</div>
+    </div>
+  </main>
+
+  <aside class="rightcol">
+    <div class="panel glow">
+      <div class="p-title"><span>电池数据覆盖率</span><small>今日采样</small></div>
+      <div class="coverage"><div class="battery-icon"><i></i></div><div><div style="font-size:11px;color:#a8c7da">今日数据覆盖率</div><div class="num">98.0<small>%</small></div></div></div>
+    </div>
+    <div class="panel glow">
+      <div class="p-title"><span>单车今日诊断统计</span></div>
+      <div class="counter-row"><div class="digits"><span>0</span><span>0</span><span id="faultCountDigit">3</span></div><div class="counter-txt"><b>今日严重故障</b>件/车</div></div>
+      <div class="counter-row" style="padding-top:2px"><div class="digits green"><span>0</span><span>1</span><span>2</span><span>8</span></div><div class="counter-txt"><b>今日采样周期</b>次</div></div>
+    </div>
+    <div class="panel glow">
+      <div class="p-title"><span>单车今日风险值</span></div>
+      <div class="risk-circles">
+        <div class="circle"><span>今日</span><b id="todayRisk">82</b><small>风险指数</small></div>
+        <div class="circle"><span>昨日</span><b style="color:#ffd84a">36</b><small>风险指数</small></div>
+      </div>
+      <div class="compare">较昨日 <span style="color:#ff5c67">↑ 46</span>　·　建议尽快检测</div>
+    </div>
+  </aside>
+
+  <section class="bottom">
+    <div class="panel bpanel glow">
+      <div class="p-title"><span>故障类型占比</span><small>车辆历史</small></div>
+      <div class="donuts">
+        <div class="donut" style="--p:75"><b>75%<br>连接异常</b></div>
+        <div class="donut c2" style="--p:62"><b>62%<br>过放电</b></div>
+        <div class="donut c3" style="--p:48"><b>48%<br>热风险</b></div>
       </div>
     </div>
-    <div>
-      <div class="panel score"><div class="title">单车风险总览</div><div style="padding-top:12px"><b id="rscore">82</b><div id="rtext" class="muted">高风险 / 建议尽快处理</div></div></div>
-      <div class="panel" style="margin-top:12px"><div class="title">今日统计</div><div class="cnt">
-        <div class="row"><span>今日预警总数</span><span>740</span></div>
-        <div class="row"><span>单体电压异常</span><span>241</span></div>
-        <div class="row"><span>过放电预警</span><span>182</span></div>
-        <div class="row"><span>热风险预警</span><span>117</span></div>
-        <div class="row"><span>需立即处理</span><span style="color:#ff5f73">36</span></div>
-      </div></div>
+    <div class="panel bpanel glow">
+      <div class="p-title"><span>关键参数趋势</span><small id="trendName">单体电压</small></div>
+      <div class="chartbox"><canvas id="trendCanvas" width="360" height="100"></canvas></div>
     </div>
-  </div>
+    <div class="panel bpanel glow">
+      <div class="p-title"><span>温度 / 电压变化</span><small>近 8 个采样点</small></div>
+      <svg class="spark" id="sparkSvg" viewBox="0 0 360 100" preserveAspectRatio="none">
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1edbff" stop-opacity=".42"/><stop offset="1" stop-color="#1edbff" stop-opacity="0"/></linearGradient></defs>
+        <path id="areaPath" fill="url(#g1)" d=""></path><polyline id="sparkLine" fill="none" stroke="#22d7ff" stroke-width="2" points=""></polyline>
+      </svg>
+    </div>
+    <div class="panel bpanel glow">
+      <div class="p-title"><span>平均 SOH</span></div>
+      <div class="gauge"><div class="semi"><b id="gaugeText">92%</b></div></div>
+      <div class="note">电池健康状态良好</div>
+    </div>
+  </section>
 </div>
+
 <script>
-const D={
-connect:{soc:'68%',soh:'92%',tv:'356V',tc:'85A',temp:'35℃',lvl:'高风险',minv:'3.21V',ptime:'12min',conf:'93%',badge:'异常预警',title:'单体电池连接异常',text:'单体电池电压出现明显异常波动，变化趋势严重，偏离正常范围，推断为单体电池连接异常故障。',risk:82,rtext:'高风险 / 建议尽快处理',data:[3.62,3.61,3.60,3.58,3.45,3.68,3.31,3.65],unit:'V',b2:'35℃',b4:'356V'},
-over:{soc:'7%',soh:'88%',tv:'286V',tc:'102A',temp:'34℃',lvl:'严重',minv:'2.86V',ptime:'10min',conf:'96%',badge:'严重预警',title:'动力电池过放电',text:'总电压逐渐减低，当 SOC 低于10% 时电压急剧下降。若总电压低于保护电压，推断为动力电池过放电故障。',risk:91,rtext:'严重 / 建议立即补能',data:[350,346,342,337,329,318,304,286],unit:'V',b2:'34℃',b4:'286V'},
-thermal:{soc:'54%',soh:'90%',tv:'348V',tc:'110A',temp:'67℃',lvl:'极高风险',minv:'3.54V',ptime:'5min',conf:'97%',badge:'紧急预警',title:'热失控 / 散热系统失效',text:'动力电池观测点温度变化明显高于正常值，可判断为电池组热失控或者散热系统失效故障。',risk:96,rtext:'极高风险 / 建议立即停车',data:[31,33,35,39,44,52,60,67],unit:'℃',b2:'67℃',b4:'348V'}
+const S={
+connect:{
+  soc:'68%',soh:'92%',volt:'356V',current:'85A',cell:'3.21V',temp:'35℃',cellState:'异常',tempState:'正常',
+  title:'单体电池连接异常',confidence:'93%',risk:82,predict:'12 min',
+  text:'单体电池电压出现明显异常波动，变化趋势严重偏离正常范围，推断为单体电池连接异常故障。',
+  trend:'单体电压',data:[3.62,3.61,3.60,3.58,3.45,3.68,3.31,3.65],unit:'V',cells:'bad'
+},
+over:{
+  soc:'7%',soh:'88%',volt:'286V',current:'102A',cell:'2.86V',temp:'34℃',cellState:'偏低',tempState:'正常',
+  title:'动力电池过放电故障',confidence:'96%',risk:91,predict:'10 min',
+  text:'动力电池使用过程中总电压持续下降，SOC 已低于 10%，且电压出现急剧下降趋势；若低于保护电压，推断为动力电池过放电故障。',
+  trend:'总电压',data:[350,346,342,337,329,318,304,286],unit:'V',cells:'low'
+},
+thermal:{
+  soc:'54%',soh:'90%',volt:'348V',current:'110A',cell:'3.54V',temp:'67℃',cellState:'正常',tempState:'异常',
+  title:'热失控 / 散热系统失效',confidence:'97%',risk:96,predict:'5 min',
+  text:'动力电池观测点温度变化明显高于正常值，可判断为电池组热失控前兆或者散热系统失效故障。',
+  trend:'观测点温度',data:[31,33,35,39,44,52,60,67],unit:'℃',cells:'hot'
+}
 };
-const c=document.getElementById('cv'),x=c.getContext('2d');
-function set(k,v){document.getElementById(k).textContent=v}
-function draw(a,u){
-  let w=c.width,h=c.height;x.clearRect(0,0,w,h);x.fillStyle='#041423';x.fillRect(0,0,w,h);x.strokeStyle='rgba(120,200,255,.15)';
-  for(let i=0;i<5;i++){let y=18+i*(h-36)/4;x.beginPath();x.moveTo(34,y);x.lineTo(w-10,y);x.stroke()}
-  const max=Math.max(...a),min=Math.min(...a),r=(max-min)||1;x.beginPath();
-  a.forEach((v,i)=>{let px=42+i*(w-70)/(a.length-1),py=h-18-((v-min)/r)*(h-42);i?x.lineTo(px,py):x.moveTo(px,py)});
-  x.strokeStyle='#22d1ff';x.lineWidth=3;x.stroke();
-  a.forEach((v,i)=>{let px=42+i*(w-70)/(a.length-1),py=h-18-((v-min)/r)*(h-42);x.beginPath();x.arc(px,py,4,0,6.28);x.fillStyle='#ffd54f';x.fill();x.fillStyle='#bfefff';x.font='12px Microsoft YaHei';x.fillText(v+u,px-12,py-10)})
+const canvas=document.getElementById('trendCanvas'),ctx=canvas.getContext('2d');
+function drawTrend(arr,unit){
+  const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#06172b';ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='rgba(74,160,216,.18)';ctx.lineWidth=1;
+  for(let i=1;i<5;i++){let y=i*h/5;ctx.beginPath();ctx.moveTo(20,y);ctx.lineTo(w-8,y);ctx.stroke()}
+  const max=Math.max(...arr),min=Math.min(...arr),range=(max-min)||1;
+  const pts=arr.map((v,i)=>({x:28+i*(w-48)/(arr.length-1),y:h-18-((v-min)/range)*(h-34)}));
+  ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+  ctx.lineTo(pts[pts.length-1].x,h-16);ctx.lineTo(pts[0].x,h-16);ctx.closePath();
+  const grd=ctx.createLinearGradient(0,0,0,h);grd.addColorStop(0,'rgba(34,215,255,.34)');grd.addColorStop(1,'rgba(34,215,255,0)');ctx.fillStyle=grd;ctx.fill();
+  ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle='#20d8ff';ctx.lineWidth=2;ctx.stroke();
+  pts.forEach((p,i)=>{ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fillStyle=i===pts.length-1?'#ffd447':'#20d8ff';ctx.fill()});
+  ctx.fillStyle='#9fc8df';ctx.font='10px Microsoft YaHei';ctx.fillText(arr[arr.length-1]+unit,w-52,14);
 }
-function upd(k){
-  let s=D[k];document.querySelectorAll('.btn').forEach(b=>b.classList.toggle('active',b.dataset.k===k));
-  ['soc','soh','tv','tc','temp','lvl','minv','ptime','conf','badge','title','text'].forEach(id=>set(id,s[id]));
-  set('risk',s.risk);document.getElementById('bar').style.width=s.risk+'%';set('b1',s.minv);set('b2',s.b2);set('b3',s.soh);set('b4',s.b4);set('rscore',s.risk);set('rtext',s.rtext);draw(s.data,s.unit)
+function drawSpark(arr){
+  const w=360,h=100,max=Math.max(...arr),min=Math.min(...arr),range=(max-min)||1;
+  const pts=arr.map((v,i)=>[10+i*(w-20)/(arr.length-1),h-14-((v-min)/range)*(h-30)]);
+  const pointStr=pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  document.getElementById('sparkLine').setAttribute('points',pointStr);
+  const d='M '+pts[0][0]+' '+(h-8)+' L '+pts.map(p=>p[0]+' '+p[1]).join(' L ')+' L '+pts[pts.length-1][0]+' '+(h-8)+' Z';
+  document.getElementById('areaPath').setAttribute('d',d);
 }
-document.querySelectorAll('.btn').forEach(b=>b.onclick=()=>upd(b.dataset.k));upd('connect');
+function set(id,v){document.getElementById(id).textContent=v}
+function setPack(mode){
+  const cells=[...document.querySelectorAll('#packCells .cell')];cells.forEach(c=>c.className='cell');
+  if(mode==='bad'){cells[4].classList.add('bad')}
+  if(mode==='low'){cells[5].classList.add('bad');cells[6].classList.add('bad')}
+  if(mode==='hot'){cells[3].classList.add('hot');cells[4].classList.add('hot');cells[5].classList.add('hot')}
+}
+function update(k){
+  const s=S[k];
+  document.querySelectorAll('.scenario-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.k===k));
+  set('tSoc',s.soc);set('tSoh',s.soh);set('tVolt',s.volt);set('tCurrent',s.current);set('tCell',s.cell);set('tTemp',s.temp);
+  set('tCellState',s.cellState);set('tTempState',s.tempState);set('faultTitle',s.title);set('confidence',s.confidence);set('riskScore',s.risk);
+  set('predictTime',s.predict);set('faultText',s.text);set('todayRisk',s.risk);set('trendName',s.trend);set('gaugeText',s.soh);
+  setPack(s.cells);drawTrend(s.data,s.unit);drawSpark(s.data);
+}
+document.querySelectorAll('.scenario-tabs button').forEach(b=>b.addEventListener('click',()=>update(b.dataset.k)));
+update('connect');
 </script>
-</body></html>
+</body>
+</html>

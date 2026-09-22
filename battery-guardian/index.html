@@ -74,19 +74,30 @@ linear-gradient(32deg,transparent 48%,rgba(0,91,184,.18) 49%,rgba(0,91,184,.18) 
 .bottom{grid-column:3/5;grid-row:3;display:grid;grid-template-columns:1.08fr 1fr 1fr .7fr;gap:8px}.bpanel{min-width:0}.donuts{height:112px;display:flex;justify-content:space-around;align-items:center}.donut{--p:75;width:72px;height:72px;border-radius:50%;background:conic-gradient(#e9486a calc(var(--p)*1%),#16324b 0);display:flex;align-items:center;justify-content:center;position:relative}.donut:after{content:"";width:49px;height:49px;background:#071a30;border-radius:50%;position:absolute}.donut b{z-index:1;font-size:10px;text-align:center}.donut.c2{background:conic-gradient(#34dbce calc(var(--p)*1%),#16324b 0)}.donut.c3{background:conic-gradient(#8c52f4 calc(var(--p)*1%),#16324b 0)}
 .chartbox{height:108px;padding:5px 10px}canvas{width:100%;height:100%}.spark{width:100%;height:100%}.gauge{display:flex;align-items:center;justify-content:center;height:110px;position:relative}.semi{width:116px;height:58px;border:10px solid #0d4f80;border-bottom:0;border-radius:116px 116px 0 0;position:relative}.semi:after{content:"";position:absolute;width:3px;height:47px;background:#2ee5ff;left:50%;bottom:-1px;transform-origin:bottom;transform:rotate(32deg);box-shadow:0 0 8px #2ee5ff}.semi b{position:absolute;left:0;right:0;text-align:center;bottom:-35px;font-size:14px;color:#c9efff}.note{position:absolute;right:12px;bottom:7px;color:#6da7ca;font-size:9px}
 .toast{position:fixed;right:22px;top:82px;z-index:99;min-width:270px;max-width:340px;background:rgba(6,29,53,.96);border:1px solid #27d5ff;border-left:4px solid #ff5f73;padding:11px 12px;box-shadow:0 0 20px rgba(0,180,255,.18);transform:translateX(120%);transition:.3s;font-size:12px;line-height:1.7}.toast.show{transform:translateX(0)}.toast b{color:#ffd447}
+.page-view{position:absolute;left:0;right:0;top:38px;bottom:0;z-index:30;background:linear-gradient(180deg,rgba(5,25,49,.98),rgba(3,15,30,.99));padding:12px;overflow:auto}
+.page-view[hidden]{display:none}.page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.page-head h2{margin:0;font-size:18px}.page-head p{margin:2px 0 0;color:#7faecb;font-size:11px}
+.page-actions{display:flex;gap:7px;flex-wrap:wrap}.ui-btn{border:1px solid #1a7eb6;background:#092b4c;color:#dff4ff;padding:7px 10px;font-size:11px;cursor:pointer}.ui-btn.active,.ui-btn:hover{border-color:#22d7ff;background:#0e5f99}
+.page-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.page-card{border:1px solid rgba(39,138,200,.42);background:rgba(8,36,67,.72);padding:11px;min-width:0}.page-card h3{margin:0 0 8px;font-size:13px;color:#bdeeff}.page-card .big{font-size:25px;font-weight:800;color:#22d7ff}.page-card small{color:#83abc4}
+.subtable{width:100%;border-collapse:collapse;font-size:11px}.subtable th,.subtable td{padding:8px 6px;border-bottom:1px solid rgba(86,149,190,.18);text-align:left}.subtable th{color:#85b8d6;font-weight:500}.link-btn{border:0;background:transparent;color:#32d9ff;cursor:pointer;padding:0;text-decoration:underline}
+.cell-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:5px;margin-top:10px}.cell-tile{height:43px;border:1px solid #167ab4;background:#0b3a63;color:#ccecff;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer}.cell-tile.warn{border-color:#ffae42;background:#5e3610}.cell-tile.danger{border-color:#ff4f68;background:#5f1830}.cell-tile.active{outline:2px solid #fff}
+.sensor-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:10px}.sensor{padding:12px 6px;border:1px solid #167ab4;background:#0a3154;text-align:center;cursor:pointer}.sensor.hot{border-color:#ff526f;background:#5d1730}.sensor b{display:block;font-size:18px}.sensor small{color:#9dc3da}
+.progress{height:9px;background:#0a223a;border:1px solid #174f77;margin-top:6px}.progress i{height:100%;display:block;background:linear-gradient(90deg,#21d7ff,#36e0a0)}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:9px}.kpi{border:1px solid rgba(39,138,200,.42);background:rgba(8,36,67,.72);padding:11px}.kpi b{font-size:22px;color:#22d7ff}.kpi span{display:block;color:#8eb4cc;font-size:10px;margin-top:3px}
+.detail-box{margin-top:9px;border:1px solid rgba(39,138,200,.42);background:rgba(7,29,55,.78);padding:10px;font-size:11px;line-height:1.8}.status-ok{color:#36e0a0}.status-warn{color:#ffd447}.status-danger{color:#ff5b71}
+
 </style>
 </head>
 <body>
 <div class="dashboard">
 <header class="header glow">
   <div class="brand"><div class="logo"></div><div><h1>电池卫士</h1><p>新能源汽车动力电池数智化诊断预警平台</p></div></div>
-  <div class="top-tabs"><span class="active">单车监测</span><span>|</span><span>故障预测</span><span>|</span><span>车辆档案</span></div>
+  <div class="top-tabs"><span class="active" data-page="battery">单车监测</span><span>|</span><span data-page="fault">故障预测</span><span>|</span><span data-page="vehicle">车辆档案</span></div>
   <div class="head-alert"><div>一般事件 <b id="normalEvent">0</b></div><div>严重故障 <b id="severeEvent">3</b></div></div>
 </header>
 
 <nav class="nav">
-  <button data-layer="all">全部</button><button>车队总览</button><button>车辆档案</button><button class="active" data-layer="battery">电池监控</button>
-  <button data-layer="voltage">电压监测</button><button data-layer="temp">温度监测</button><button data-layer="fault">故障预警</button><button>SOC</button><button>SOH</button><button>维修记录</button><button>数据中心</button>
+  <button data-page="summary">全部</button><button data-page="fleet">车队总览</button><button data-page="vehicle">车辆档案</button><button class="active" data-page="battery">电池监控</button>
+  <button data-page="voltage">电压监测</button><button data-page="temp">温度监测</button><button data-page="fault">故障预警</button><button data-page="soc">SOC</button><button data-page="soh">SOH</button><button data-page="service">维修记录</button><button data-page="data">数据中心</button>
 </nav>
 
 <section class="leftcol">
@@ -183,6 +194,8 @@ linear-gradient(32deg,transparent 48%,rgba(0,91,184,.18) 49%,rgba(0,91,184,.18) 
     <div class="layer-legend"><span class="legend-dot" style="background:#21e1ff"></span>正常 <span class="legend-dot" style="background:#ff9e2f"></span>预警 <span class="legend-dot" style="background:#ff23d0"></span>严重</div>
     <div class="map-bottom-label">INTERACTIVE CITY MAP · BATTERY GUARDIAN · PAN / ZOOM / CLICK MARKER</div>
   </div>
+
+  <section class="page-view" id="pageView" hidden aria-live="polite"></section>
 </main>
 
 <aside class="rightcol">
@@ -325,8 +338,102 @@ setInterval(()=>{
   set('tSoc',fmt(soc,1)+'%');set('tVolt',fmt(volt,1)+'V');set('tTemp',fmt(temp,1)+'℃')
 },2000);
 
-document.querySelectorAll('.top-tabs span').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('.top-tabs span').forEach(x=>x.classList.remove('active'));if(el.textContent!=='|')el.classList.add('active')}));
-document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(b.dataset.layer){colorMarkers(b.dataset.layer);showToast('功能切换',b.textContent+' 已开启')}}));
+
+const pageView=document.getElementById('pageView');
+const scenarioTabs=document.querySelector('.scenario-tabs');
+const coreMap=document.getElementById('mapBox');
+
+function pageShell(title,desc,actions,body){
+  return '<div class="page-head"><div><h2>'+title+'</h2><p>'+desc+'</p></div><div class="page-actions">'+actions+'</div></div>'+body;
+}
+function vehicleRows(){
+  return Object.entries(V).map(([id,v])=>'<tr><td>'+id+'</td><td>'+(v.scenario==='thermal'?'温度风险':v.scenario==='over'?'过放电风险':v.risk>=60?'单体异常':'正常')+'</td><td class="'+(v.risk>=90?'status-danger':v.risk>=60?'status-warn':'status-ok')+'">'+v.risk+'</td><td><button class="link-btn monitor-vehicle" data-id="'+id+'">进入监控</button></td></tr>').join('');
+}
+function renderSummary(){
+  pageView.innerHTML=pageShell('综合总览','所有车辆、电池状态与风险事件汇总',
+    '<button class="ui-btn" data-go="battery">进入实时监控</button>',
+    '<div class="kpi-row"><div class="kpi"><b>128</b><span>在线车辆</span></div><div class="kpi"><b>5</b><span>当前预警</span></div><div class="kpi"><b>98.0%</b><span>数据覆盖率</span></div><div class="kpi"><b>92%</b><span>平均 SOH</span></div></div>'+
+    '<div class="page-grid"><div class="page-card"><h3>风险车辆</h3><div class="big">3</div><small>需要重点关注</small></div><div class="page-card"><h3>今日采样</h3><div class="big">128</div><small>轮完整采样</small></div><div class="page-card"><h3>主要故障</h3><div class="big">连接异常</div><small>当前占比最高</small></div></div>'+
+    '<div class="detail-box"><b>系统状态：</b> 数据链路在线，BMS 采样正常；点击左侧任意功能可进入对应交互页面。</div>');
+}
+function renderFleet(filter='all'){
+  const rows=Object.entries(V).filter(([id,v])=>filter==='all'||(filter==='risk'&&v.risk>=60)||(filter==='normal'&&v.risk<60)).map(([id,v])=>
+    '<tr><td>'+id+'</td><td>'+(v.risk>=90?'严重':v.risk>=60?'预警':'正常')+'</td><td>'+v.risk+'</td><td><button class="link-btn monitor-vehicle" data-id="'+id+'">查看</button></td></tr>').join('');
+  pageView.innerHTML=pageShell('车队总览','按风险状态筛选并进入单车监控',
+    '<button class="ui-btn fleet-filter '+(filter==='all'?'active':'')+'" data-filter="all">全部</button><button class="ui-btn fleet-filter '+(filter==='risk'?'active':'')+'" data-filter="risk">高风险</button><button class="ui-btn fleet-filter '+(filter==='normal'?'active':'')+'" data-filter="normal">正常</button>',
+    '<div class="kpi-row"><div class="kpi"><b>128</b><span>车辆总数</span></div><div class="kpi"><b>8</b><span>预警车辆</span></div><div class="kpi"><b>3</b><span>严重车辆</span></div><div class="kpi"><b>96.4%</b><span>在线率</span></div></div><div class="page-card"><table class="subtable"><thead><tr><th>车辆</th><th>状态</th><th>风险值</th><th>操作</th></tr></thead><tbody>'+rows+'</tbody></table></div>');
+}
+function renderVehicle(){
+  pageView.innerHTML=pageShell('车辆档案','选择车辆查看档案并进入实时监控','',
+    '<div class="page-grid"><div class="page-card"><h3>车辆基本信息</h3><div class="row"><span>车辆编号</span><b id="profileId">EV-2026-013</b></div><div class="row"><span>动力类型</span><b>纯电动</b></div><div class="row"><span>电池类型</span><b>动力电池包</b></div><div class="row"><span>采样状态</span><b class="status-ok">在线</b></div></div>'+
+    '<div class="page-card"><h3>电池档案</h3><div class="row"><span>当前 SOC</span><b id="profileSoc">68%</b></div><div class="row"><span>当前 SOH</span><b id="profileSoh">92%</b></div><div class="row"><span>风险指数</span><b id="profileRisk">82</b></div><div class="row"><span>最近故障</span><b id="profileFault">单体连接异常</b></div></div>'+
+    '<div class="page-card"><h3>车辆选择</h3><select id="vehicleSelect" style="width:100%;padding:9px;background:#082a49;color:#e8f7ff;border:1px solid #1b78ad">'+Object.keys(V).map(id=>'<option>'+id+'</option>').join('')+'</select><button class="ui-btn" id="openSelectedVehicle" style="margin-top:10px;width:100%">进入该车监控</button></div></div>');
+}
+function renderVoltage(){
+  const cells=Array.from({length:48},(_,i)=>{const v=(3.62+Math.sin(i*.7)*.025-(i===36?.33:0)).toFixed(2);const cls=i===36?'danger':(i===17||i===29?'warn':'');return '<button class="cell-tile '+cls+'" data-cell="'+(i+1)+'" data-v="'+v+'">#'+String(i+1).padStart(2,'0')+'<br>'+v+'V</button>'}).join('');
+  pageView.innerHTML=pageShell('电压监测','点击任意单体查看电压详情',
+    '<button class="ui-btn active">单体电压</button><button class="ui-btn" data-voltage-mode="pack">总电压趋势</button>',
+    '<div class="kpi-row"><div class="kpi"><b>356V</b><span>总电压</span></div><div class="kpi"><b>3.68V</b><span>最高单体</span></div><div class="kpi"><b>3.21V</b><span>最低单体</span></div><div class="kpi"><b>0.47V</b><span>最大压差</span></div></div><div class="page-card"><h3>单体电池电压阵列</h3><div class="cell-grid">'+cells+'</div><div class="detail-box" id="cellDetail">点击上方任意单体查看详情。</div></div>');
+}
+function renderTemp(){
+  const vals=[33,34,35,36,34,33,35,36,38,41,53,67,35,36,37,39,42,44,34,35,36,37,38,39];
+  pageView.innerHTML=pageShell('温度监测','点击温度探头查看局部热状态',
+    '<button class="ui-btn active">温度矩阵</button><button class="ui-btn" data-go="fault">查看热风险预警</button>',
+    '<div class="kpi-row"><div class="kpi"><b>67℃</b><span>最高温度</span></div><div class="kpi"><b>33℃</b><span>最低温度</span></div><div class="kpi"><b>34℃</b><span>最大温差</span></div><div class="kpi"><b>2</b><span>高温观测点</span></div></div><div class="page-card"><h3>温度观测点</h3><div class="sensor-grid">'+vals.map((v,i)=>'<button class="sensor '+(v>=55?'hot':'')+'" data-sensor="'+(i+1)+'" data-temp="'+v+'"><b>'+v+'℃</b><small>T'+String(i+1).padStart(2,'0')+'</small></button>').join('')+'</div><div class="detail-box" id="sensorDetail">点击探头查看局部温升判断。</div></div>');
+}
+function renderFault(){
+  pageView.innerHTML=pageShell('故障预警','预警事件可直接联动到对应故障场景',
+    '<button class="ui-btn" id="ackAll">全部标记已读</button>',
+    '<div class="page-card"><table class="subtable"><thead><tr><th>时间</th><th>车辆</th><th>故障</th><th>等级</th><th>操作</th></tr></thead><tbody>'+
+    '<tr><td>21:43:08</td><td>EV-2026-013</td><td>单体连接异常</td><td class="status-warn">高</td><td><button class="link-btn fault-link" data-fault="connect">查看</button></td></tr>'+
+    '<tr><td>21:36:15</td><td>EV-2026-052</td><td>动力电池过放电</td><td class="status-danger">严重</td><td><button class="link-btn fault-link" data-fault="over">查看</button></td></tr>'+
+    '<tr><td>21:28:42</td><td>EV-2026-107</td><td>热失控 / 散热失效</td><td class="status-danger">严重</td><td><button class="link-btn fault-link" data-fault="thermal">查看</button></td></tr>'+
+    '</tbody></table></div><div class="detail-box" id="faultReadState">当前有 3 条未处理预警。</div>');
+}
+function renderSOC(){
+  pageView.innerHTML=pageShell('SOC 监测','演示当前电量与放电趋势交互',
+    '<button class="ui-btn" id="socMinus">模拟放电 -5%</button><button class="ui-btn" id="socReset">恢复初始值</button>',
+    '<div class="page-grid"><div class="page-card"><h3>当前 SOC</h3><div class="big" id="socBig">68%</div><div class="progress"><i id="socBar" style="width:68%"></i></div></div><div class="page-card"><h3>预计剩余续航</h3><div class="big" id="rangeBig">286 km</div><small>演示估算值</small></div><div class="page-card"><h3>状态判断</h3><div class="big status-ok" id="socJudge">正常</div><small>低于 10% 将进入过放电重点监测</small></div></div>');
+}
+function renderSOH(){
+  pageView.innerHTML=pageShell('SOH 健康度','查看电池健康状态与衰减水平',
+    '<button class="ui-btn" id="sohRefresh">刷新评估</button>',
+    '<div class="kpi-row"><div class="kpi"><b id="sohBig">92%</b><span>当前 SOH</span></div><div class="kpi"><b>8%</b><span>累计衰减</span></div><div class="kpi"><b>685kΩ</b><span>绝缘状态</span></div><div class="kpi"><b class="status-ok">良好</b><span>健康等级</span></div></div><div class="page-card"><h3>健康度分项</h3><div class="row"><span>容量保持</span><b>93%</b></div><div class="row"><span>内阻状态</span><b>90%</b></div><div class="row"><span>一致性</span><b>88%</b></div><div class="row"><span>温度稳定性</span><b>94%</b></div><div class="detail-box" id="sohMsg">当前健康状态良好，建议持续进行趋势监测。</div></div>');
+}
+function renderService(){
+  pageView.innerHTML=pageShell('维修记录','查看并添加演示维修记录',
+    '<button class="ui-btn" id="addService">+ 新增演示记录</button>',
+    '<div class="page-card"><table class="subtable"><thead><tr><th>日期</th><th>车辆</th><th>项目</th><th>结果</th></tr></thead><tbody id="serviceBody"><tr><td>2026-09-10</td><td>EV-2026-013</td><td>连接器检查</td><td class="status-ok">完成</td></tr><tr><td>2026-08-28</td><td>EV-2026-052</td><td>低压保护检查</td><td class="status-ok">完成</td></tr></tbody></table></div>');
+}
+function renderData(){
+  pageView.innerHTML=pageShell('数据中心','汇总单车监控数据并支持本地导出',
+    '<button class="ui-btn" id="refreshData">刷新汇总</button><button class="ui-btn" id="exportData">导出 CSV</button>',
+    '<div class="kpi-row"><div class="kpi"><b>1,024</b><span>今日采样点</span></div><div class="kpi"><b>98.0%</b><span>数据完整率</span></div><div class="kpi"><b>128</b><span>在线车辆</span></div><div class="kpi"><b>3</b><span>故障模型</span></div></div><div class="page-card"><h3>数据同步状态</h3><div class="row"><span>BMS 数据</span><b class="status-ok">已同步</b></div><div class="row"><span>故障诊断结果</span><b class="status-ok">已同步</b></div><div class="row"><span>车辆位置</span><b class="status-ok">已同步</b></div><div class="detail-box" id="dataRefreshText">最近刷新：刚刚</div></div>');
+}
+function bindPageInteractions(page){
+  pageView.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.go)));
+  pageView.querySelectorAll('.monitor-vehicle').forEach(b=>b.addEventListener('click',()=>{selectedVehicle=b.dataset.id;set('vehicleId',selectedVehicle);set('selectedVehicleText','当前车辆 '+selectedVehicle);const v=V[selectedVehicle];if(v)applyScenario(v.scenario);openPage('battery');showToast('已进入单车监控',selectedVehicle)}));
+  pageView.querySelectorAll('.fleet-filter').forEach(b=>b.addEventListener('click',()=>{renderFleet(b.dataset.filter);bindPageInteractions('fleet')}));
+  if(page==='vehicle'){const sel=document.getElementById('vehicleSelect');sel.addEventListener('change',()=>{const v=V[sel.value],s=S[v.scenario];set('profileId',sel.value);set('profileSoc',s.soc+'%');set('profileSoh',s.soh+'%');set('profileRisk',v.risk);set('profileFault',s.title)});document.getElementById('openSelectedVehicle').onclick=()=>{selectedVehicle=sel.value;set('vehicleId',selectedVehicle);set('selectedVehicleText','当前车辆 '+selectedVehicle);const v=V[selectedVehicle];applyScenario(v.scenario);openPage('battery')}}
+  if(page==='voltage'){pageView.querySelectorAll('.cell-tile').forEach(t=>t.onclick=()=>{pageView.querySelectorAll('.cell-tile').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.getElementById('cellDetail').innerHTML='<b>单体 '+t.dataset.cell+'</b>：当前电压 '+t.dataset.v+'V；'+(Number(t.dataset.v)<3.3?'<span class="status-danger">明显偏低，建议检查连接与采样线路。</span>':'<span class="status-ok">处于演示正常范围。</span>')} )}}
+  if(page==='temp'){pageView.querySelectorAll('.sensor').forEach(t=>t.onclick=()=>{pageView.querySelectorAll('.sensor').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.getElementById('sensorDetail').innerHTML='<b>温度探头 T'+String(t.dataset.sensor).padStart(2,'0')+'</b>：'+t.dataset.temp+'℃；'+(Number(t.dataset.temp)>=55?'<span class="status-danger">温度异常，进入热安全预警。</span>':'<span class="status-ok">当前温度正常。</span>')})}
+  if(page==='fault'){pageView.querySelectorAll('.fault-link').forEach(b=>b.onclick=()=>{applyScenario(b.dataset.fault,true);openPage('battery')});document.getElementById('ackAll').onclick=()=>{document.getElementById('faultReadState').textContent='所有预警已标记为已读（演示状态）。';showToast('预警中心','已标记为已读')}}
+  if(page==='soc'){let val=68;const update=()=>{set('socBig',val+'%');document.getElementById('socBar').style.width=val+'%';set('rangeBig',Math.round(val*4.2)+' km');set('socJudge',val<10?'过放电高风险':val<20?'低电量预警':'正常');document.getElementById('socJudge').className='big '+(val<10?'status-danger':val<20?'status-warn':'status-ok')};document.getElementById('socMinus').onclick=()=>{val=Math.max(0,val-5);update()};document.getElementById('socReset').onclick=()=>{val=68;update()}}
+  if(page==='soh'){document.getElementById('sohRefresh').onclick=()=>{set('sohMsg','评估已刷新：容量、内阻、一致性与温度稳定性数据均已重新计算。');showToast('SOH 评估','健康度评估已刷新')}}
+  if(page==='service'){document.getElementById('addService').onclick=()=>{const tr=document.createElement('tr');tr.innerHTML='<td>'+new Date().toISOString().slice(0,10)+'</td><td>'+selectedVehicle+'</td><td>电池系统复检</td><td class="status-warn">待确认</td>';document.getElementById('serviceBody').prepend(tr);showToast('维修记录','已新增一条演示记录')}}
+  if(page==='data'){document.getElementById('refreshData').onclick=()=>{set('dataRefreshText','最近刷新：'+new Date().toLocaleTimeString());showToast('数据中心','汇总数据已刷新')};document.getElementById('exportData').onclick=()=>{const csv='vehicle,soc,soh,risk\n'+selectedVehicle+','+S[current].soc+','+S[current].soh+','+S[current].risk;const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='battery-guardian-demo.csv';a.click();URL.revokeObjectURL(a.href)}}
+}
+function openPage(page){
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  document.querySelectorAll('.top-tabs span[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  if(page==='battery'){pageView.hidden=true;scenarioTabs.style.display='flex';coreMap.style.display='block';return}
+  pageView.hidden=false;scenarioTabs.style.display='none';coreMap.style.display='none';
+  if(page==='summary')renderSummary();else if(page==='fleet')renderFleet();else if(page==='vehicle')renderVehicle();else if(page==='voltage')renderVoltage();else if(page==='temp')renderTemp();else if(page==='fault')renderFault();else if(page==='soc')renderSOC();else if(page==='soh')renderSOH();else if(page==='service')renderService();else if(page==='data')renderData();
+  bindPageInteractions(page);
+}
+document.querySelectorAll('.nav button[data-page]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.page)));
+document.querySelectorAll('.top-tabs span[data-page]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.page)));
+
 
 applyScenario('connect');colorMarkers('battery');
 </script>

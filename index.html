@@ -357,12 +357,32 @@ h1{margin:3px 0 0;font-size:22px;color:#153767}
 <div class="footer"><span>粮安智守 · 智能粮情监测与预警平台 V1.3</span><span>CODBOT 设备联动 · 联调演示数据 · Web / 小程序接口预留</span></div>
 </main>
 </div><div class="toast" id="toast"></div>
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.28.6/cloudbase.full.js"></script>
 <script>
 const S={risk:"yellow",env:{t:21.6,h:68.2},s:[["01","上层左侧",22.1,.2,"green"],["02","上层右侧",22.7,.3,"green"],["03","中层核心",24.8,.8,"yellow"],["04","中层边缘",23.2,.4,"green"],["05","下层左侧",21.9,.1,"green"],["06","下层右侧",22.4,.2,"green"]],alarms:[["今天 11:26","持续升温","探头 03","yellow","近 60 分钟升温约 0.8℃"],["今天 09:42","湿度偏高","环境节点","yellow","湿度持续高于 67%RH"],["昨天 18:08","局部温差","探头 02 / 03","red","两测点温差一度扩大至 4.1℃"],["昨天 12:31","通信恢复","控制终端","green","网络恢复，数据补传完成"]]};
 const $=q=>document.querySelector(q),qsa=q=>Array.from(document.querySelectorAll(q)),lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
 let deviceOnline=false,serialPort=null,serialReader=null,manualClosing=false,initializationRunId=0,initializationComplete=false;
 const CH340_VID=0x1A86;
-const SYNC_API="https://jubilant-frivolous-downgrade--cnjyh8tdr6.replit.app";
+const CLOUD_ENV="cloud1-d9gspi69j0ee0d9cd";
+const cloudApp=cloudbase.init({env:CLOUD_ENV,region:"ap-shanghai"});
+const cloudAuth=cloudApp.auth({persistence:"local"});
+let cloudReadyPromise=null;
+async function ensureCloudReady(){
+  if(!cloudReadyPromise){
+    cloudReadyPromise=(async()=>{
+      await cloudAuth.anonymousAuthProvider().signIn();
+      return true;
+    })().catch(e=>{cloudReadyPromise=null;throw e});
+  }
+  return cloudReadyPromise;
+}
+function normalizeCloudResult(res){
+  let x=res&&res.result;
+  if(typeof x==="string"){
+    try{x=JSON.parse(x)}catch(_){}
+  }
+  return x;
+}
 function renderDeviceCards(){
   const root=$("#deviceCards");
   if(!root)return;
@@ -494,9 +514,9 @@ async function runInitializationSequence(){
     $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 数据已同步";
     toast("数据已同步到小程序");
   }else{
-    status.textContent="云端同步失败，请检查网络";
+    status.textContent="微信云端同步失败，请检查 grainSync";
     $("#heart").textContent="云端同步失败";
-    toast("云端同步失败");
+    toast("微信云端同步失败");
   }
   await sleep(900);
   if(deviceOnline&&runId===initializationRunId)panel.classList.add("is-hidden");
@@ -605,6 +625,7 @@ async function initSerial(){
 async function syncToCloud(){
   if(!deviceOnline||!initializationComplete)return false;
   try{
+    await ensureCloudReady();
     const realtime={
       siteId:"site-a",
       siteName:$("#site").value,
@@ -620,19 +641,44 @@ async function syncToCloud(){
     };
     const history=series(16).map(x=>Number(x[2].toFixed(1)));
     const alerts=S.alarms.map((a,i)=>({id:i+1,time:a[0],title:a[1],point:a[2],level:a[3],desc:a[4],handled:false}));
-    const opts=data=>({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
-    const results=await Promise.all([
-      fetch(SYNC_API+"/api/realtime",opts(realtime)),
-      fetch(SYNC_API+"/api/history",opts({siteId:"site-a",values:history})),
-      fetch(SYNC_API+"/api/alerts",opts({siteId:"site-a",alerts}))
-    ]);
-    return results.every(x=>x.ok);
-  }catch(e){return false}
+    const res=await cloudApp.callFunction({
+      name:"grainSync",
+      data:{action:"push",siteId:"site-a",payload:{realtime,history,alerts}}
+    });
+    const result=normalizeCloudResult(res);
+    if(!result||result.ok!==true){
+      console.error("grainSync push failed",result);
+      return false;
+    }
+    return true;
+  }catch(e){
+    console.error("CloudBase sync failed",e);
+    return false;
+  }
 }
 async function syncOffline(){
   try{
-    await fetch(SYNC_API+"/api/realtime",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({siteId:"site-a",siteName:$("#site").value,deviceOnline:false,updateTime:new Date().toLocaleTimeString("zh-CN",{hour12:false}),demoData:true})});
-  }catch(e){}
+    await ensureCloudReady();
+    const realtime={
+      siteId:"site-a",
+      siteName:$("#site").value,
+      deviceOnline:false,
+      risk:"green",
+      riskText:"终端离线",
+      desc:"等待网页版终端连接并同步数据",
+      ambientTemp:null,
+      humidity:null,
+      sensors:[],
+      updateTime:new Date().toLocaleTimeString("zh-CN",{hour12:false}),
+      demoData:true
+    };
+    await cloudApp.callFunction({
+      name:"grainSync",
+      data:{action:"push",siteId:"site-a",payload:{realtime,history:[],alerts:[]}}
+    });
+  }catch(e){
+    console.error("CloudBase offline sync failed",e);
+  }
 }
 function toast(x){let e=$("#toast");e.textContent=x;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1500)}
 function risk(){if(S.s.some(x=>x[4]=="red"))return"red";if(S.s.some(x=>x[4]=="yellow")||S.env.h>=67)return"yellow";return"green"}

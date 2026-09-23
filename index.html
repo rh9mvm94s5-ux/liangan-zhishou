@@ -367,39 +367,16 @@ h1{margin:3px 0 0;font-size:22px;color:#153767}
   <div id="adviceData" class="card section advice is-hidden"><div id="adviceBig"></div></div>
 </section>
 <section class="page" id="settings"><div class="pagehead"><div class="ey">SYSTEM SETTINGS</div><h2>系统设置</h2><div class="muted">预留网页版与微信小程序共用接口。</div></div><div class="settings"><div class="card"><h3>演示状态测试</h3><div class="controls"><button data-demo="green">模拟正常</button><button data-demo="yellow">模拟关注</button><button data-demo="red">模拟预警</button></div></div><div class="card"><h3>接口预留</h3><code>GET /api/realtime?siteId=...</code><code>GET /api/history?siteId=...&hours=24</code><code>GET /api/alerts?siteId=...</code><code>POST /api/alerts/:id/ack</code></div></div></section>
-<div class="footer"><span>粮安智守 · 智能粮情监测与预警平台 V1.6</span><span>CODBOT 设备联动 · 微信云开发同步 · 联调演示数据</span></div>
+<div class="footer"><span>粮安智守 · 智能粮情监测与预警平台 V1.7</span><span>CODBOT 设备联动 · HTTP 网关同步 · 联调演示数据</span></div>
 </main>
 </div><div class="toast" id="toast"></div>
-<script src="https://static.cloudbase.net/cloudbase-js-sdk/2.28.6/cloudbase.full.js"></script>
 <script>
 const S={risk:"yellow",env:{t:21.6,h:68.2},s:[["01","上层左侧",22.1,.2,"green"],["02","上层右侧",22.7,.3,"green"],["03","中层核心",24.8,.8,"yellow"],["04","中层边缘",23.2,.4,"green"],["05","下层左侧",21.9,.1,"green"],["06","下层右侧",22.4,.2,"green"]],alarms:[["今天 11:26","持续升温","探头 03","yellow","近 60 分钟升温约 0.8℃"],["今天 09:42","湿度偏高","环境节点","yellow","湿度持续高于 67%RH"],["昨天 18:08","局部温差","探头 02 / 03","red","两测点温差一度扩大至 4.1℃"],["昨天 12:31","通信恢复","控制终端","green","网络恢复，数据补传完成"]]};
 const $=q=>document.querySelector(q),qsa=q=>Array.from(document.querySelectorAll(q)),lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
 let deviceOnline=false,serialPort=null,serialReader=null,manualClosing=false,initializationRunId=0,initializationComplete=false;
 const CH340_VID=0x1A86;
-const CLOUD_ENV="cloud1-d9gspi69j0ee0d9cd";
-const cloudApp=cloudbase.init({env:CLOUD_ENV,region:"ap-shanghai"});
-const cloudAuth=cloudApp.auth();
-let cloudReadyPromise=null,lastCloudError="";
-async function ensureCloudReady(){
-  if(!cloudReadyPromise){
-    cloudReadyPromise=(async()=>{
-      await cloudAuth.signInAnonymously();
-      return true;
-    })().catch(e=>{
-      console.error("CloudBase anonymous login failed",e);
-      cloudReadyPromise=null;
-      throw e;
-    });
-  }
-  return cloudReadyPromise;
-}
-function normalizeCloudResult(res){
-  let x=res&&res.result;
-  if(typeof x==="string"){
-    try{x=JSON.parse(x)}catch(_){}
-  }
-  return x;
-}
+const SYNC_GATEWAY="https://cloud1-d9gspi69j0ee0d9cd-1494280712.ap-shanghai.app.tcloudbase.com/grain-sync";
+let lastCloudError="";
 function renderDeviceCards(){
   const root=$("#deviceCards");
   if(!root)return;
@@ -650,10 +627,23 @@ async function initSerial(){
   });
 }
 
+async function postGateway(data){
+  const res=await fetch(SYNC_GATEWAY,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
+  let payload=null;
+  try{payload=await res.json()}catch(_){}
+  if(!res.ok){
+    const msg=(payload&&payload.message)||("HTTP "+res.status);
+    throw new Error(msg);
+  }
+  return payload;
+}
 async function syncToCloud(){
   if(!deviceOnline||!initializationComplete)return false;
   try{
-    await ensureCloudReady();
     const realtime={
       siteId:"site-a",
       siteName:$("#site").value,
@@ -669,27 +659,21 @@ async function syncToCloud(){
     };
     const history=series(16).map(x=>Number(x[2].toFixed(1)));
     const alerts=S.alarms.map((a,i)=>({id:i+1,time:a[0],title:a[1],point:a[2],level:a[3],desc:a[4],handled:false}));
-    const res=await cloudApp.callFunction({
-      name:"grainSync",
-      data:{action:"push",siteId:"site-a",payload:{realtime,history,alerts}}
-    });
-    const result=normalizeCloudResult(res);
+    const result=await postGateway({action:"push",siteId:"site-a",payload:{realtime,history,alerts}});
     if(!result||result.ok!==true){
       lastCloudError=(result&&result.message)||"grainSync 返回异常";
-      console.error("grainSync push failed",result);
       return false;
     }
     lastCloudError="";
     return true;
   }catch(e){
     lastCloudError=(e&&((e.code?e.code+": ":"")+(e.message||e.errMsg||"未知错误")))||"未知错误";
-    console.error("CloudBase sync failed",e);
+    console.error("HTTP gateway sync failed",e);
     return false;
   }
 }
 async function syncOffline(){
   try{
-    await ensureCloudReady();
     const realtime={
       siteId:"site-a",
       siteName:$("#site").value,
@@ -703,12 +687,9 @@ async function syncOffline(){
       updateTime:new Date().toLocaleTimeString("zh-CN",{hour12:false}),
       demoData:true
     };
-    await cloudApp.callFunction({
-      name:"grainSync",
-      data:{action:"push",siteId:"site-a",payload:{realtime,history:[],alerts:[]}}
-    });
+    await postGateway({action:"push",siteId:"site-a",payload:{realtime,history:[],alerts:[]}});
   }catch(e){
-    console.error("CloudBase offline sync failed",e);
+    console.error("HTTP gateway offline sync failed",e);
   }
 }
 function toast(x){let e=$("#toast");e.textContent=x;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1500)}

@@ -365,14 +365,18 @@ let deviceOnline=false,serialPort=null,serialReader=null,manualClosing=false,ini
 const CH340_VID=0x1A86;
 const CLOUD_ENV="cloud1-d9gspi69j0ee0d9cd";
 const cloudApp=cloudbase.init({env:CLOUD_ENV,region:"ap-shanghai"});
-const cloudAuth=cloudApp.auth({persistence:"local"});
+const cloudAuth=cloudApp.auth();
 let cloudReadyPromise=null;
 async function ensureCloudReady(){
   if(!cloudReadyPromise){
     cloudReadyPromise=(async()=>{
-      await cloudAuth.anonymousAuthProvider().signIn();
+      await cloudAuth.signInAnonymously();
       return true;
-    })().catch(e=>{cloudReadyPromise=null;throw e});
+    })().catch(e=>{
+      console.error("CloudBase anonymous login failed",e);
+      cloudReadyPromise=null;
+      throw e;
+    });
   }
   return cloudReadyPromise;
 }

@@ -193,6 +193,33 @@ h1{margin:3px 0 0;font-size:22px;color:#153767}
   display:inline-block;margin-top:16px;padding:8px 12px;border-radius:999px;
   background:#edf4fc;color:#4773a5;font-size:11px
 }
+.init-panel{
+  padding:22px;margin-bottom:14px;
+  background:
+    radial-gradient(circle at 92% 8%,rgba(54,128,226,.10),transparent 24%),
+    linear-gradient(180deg,#ffffff,#f8fbff)
+}
+.init-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}
+.init-top h3{margin:4px 0 0;color:#173968;font-size:18px}
+.init-badge{font-size:10px;padding:5px 9px;border-radius:999px;background:#edf4fc;color:#4d74a2;border:1px solid #d7e5f5}
+.init-steps{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+.init-step{
+  position:relative;padding:13px 10px;border:1px solid #e1e9f3;border-radius:12px;background:#f8fbff;
+  text-align:center;color:#8a99ad;font-size:11px;transition:.32s ease
+}
+.init-step .step-dot{
+  width:28px;height:28px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;
+  background:#e8eef6;color:#8091a6;font-size:12px;font-weight:800;transition:.32s ease
+}
+.init-step.active{border-color:#8cb8ee;background:#eef6ff;color:#315d91;transform:translateY(-2px)}
+.init-step.active .step-dot{background:#2f78dc;color:white;box-shadow:0 0 0 6px rgba(47,120,220,.10)}
+.init-step.done{border-color:#bfe5d0;background:#f2fbf6;color:#2f7556}
+.init-step.done .step-dot{background:#35b779;color:white}
+.init-status{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:16px;color:#55708f;font-size:12px}
+.init-progress{height:7px;border-radius:99px;background:#e7eef7;overflow:hidden;margin-top:10px}
+.init-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2f78dc,#65a8ff);transition:width .45s ease}
+.data-reveal{animation:dataReveal .65s ease both}
+@keyframes dataReveal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .flow-node{
   background:#f7faff;border:1px solid #dfe8f3;border-radius:12px;padding:14px;text-align:center;
   color:#355577;font-size:12px
@@ -221,9 +248,11 @@ h1{margin:3px 0 0;font-size:22px;color:#153767}
   header{padding:14px 16px}
   .sensors{grid-template-columns:repeat(2,1fr)}
   .device-flow{grid-template-columns:repeat(2,1fr)}
+  .init-steps{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:620px){
   .metrics,.devices,.settings,.sensors,.device-flow{grid-template-columns:1fr}
+  .init-steps{grid-template-columns:repeat(2,1fr)}
   .hero{align-items:flex-start;flex-direction:column;gap:10px}
   .tools{justify-content:flex-start}
   .tools .pill{display:none}
@@ -252,6 +281,22 @@ h1{margin:3px 0 0;font-size:22px;color:#153767}
 
 <section class="page active" id="overview">
 <div id="deviceStrip" class="device-strip off"><b>○ 硬件终端未接入</b><span>首次使用请点击右上角“连接终端”，选择 USB-SERIAL CH340</span></div>
+<div id="initPanel" class="card init-panel is-hidden">
+  <div class="init-top">
+    <div><div class="ey">SYSTEM INITIALIZATION</div><h3>粮安智守终端初始化</h3></div>
+    <span class="init-badge">联调演示流程</span>
+  </div>
+  <div class="init-steps">
+    <div class="init-step" data-init-step="0"><div class="step-dot">1</div>终端已接入</div>
+    <div class="init-step" data-init-step="1"><div class="step-dot">2</div>蓝牙模块已接入</div>
+    <div class="init-step" data-init-step="2"><div class="step-dot">3</div>温度探针模块已接入</div>
+    <div class="init-step" data-init-step="3"><div class="step-dot">4</div>蜂鸣警报器已接入</div>
+    <div class="init-step" data-init-step="4"><div class="step-dot">5</div>正在刷新数据</div>
+    <div class="init-step" data-init-step="5"><div class="step-dot">6</div>数据已同步到小程序</div>
+  </div>
+  <div class="init-status"><span id="initStatusText">准备初始化...</span><span id="initPercent">0%</span></div>
+  <div class="init-progress"><i id="initProgressBar"></i></div>
+</div>
 <div id="overviewOffline" class="card offline-empty">
   <div>
     <div class="empty-icon">⌁</div>
@@ -315,16 +360,19 @@ h1{margin:3px 0 0;font-size:22px;color:#153767}
 <script>
 const S={risk:"yellow",env:{t:21.6,h:68.2},s:[["01","上层左侧",22.1,.2,"green"],["02","上层右侧",22.7,.3,"green"],["03","中层核心",24.8,.8,"yellow"],["04","中层边缘",23.2,.4,"green"],["05","下层左侧",21.9,.1,"green"],["06","下层右侧",22.4,.2,"green"]],alarms:[["今天 11:26","持续升温","探头 03","yellow","近 60 分钟升温约 0.8℃"],["今天 09:42","湿度偏高","环境节点","yellow","湿度持续高于 67%RH"],["昨天 18:08","局部温差","探头 02 / 03","red","两测点温差一度扩大至 4.1℃"],["昨天 12:31","通信恢复","控制终端","green","网络恢复，数据补传完成"]]};
 const $=q=>document.querySelector(q),qsa=q=>Array.from(document.querySelectorAll(q)),lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
-let deviceOnline=false,serialPort=null,serialReader=null,manualClosing=false;
+let deviceOnline=false,serialPort=null,serialReader=null,manualClosing=false,initializationRunId=0,initializationComplete=false;
 const CH340_VID=0x1A86;
 function renderDeviceCards(){
   const root=$("#deviceCards");
   if(!root)return;
   const online=deviceOnline;
+  const ready=initializationComplete;
   root.innerHTML=[
-    ["主控终端","CODBOT STM32 开发板",online?"green":"yellow",online?"在线":"待接入","作为硬件演示终端，与网页建立 USB 串口连接。"],
-    ["通信链路","USB-SERIAL CH340",online?"green":"yellow",online?"已连接":"未连接","负责电脑端串口识别，用于触发网页终端在线状态。"],
-    ["粮情数据","联调演示数据",online?"green":"yellow",online?"同步中":"暂停","温度、湿度与风险等级为产品原型联调模拟数据。"]
+    ["主控终端","CODBOT STM32 开发板",online?"green":"yellow",online?"在线":"待接入","实际通过 USB 串口与网页建立连接。"],
+    ["蓝牙模块","无线通信模块",online?(ready?"green":"yellow"):"yellow",online?(ready?"已联调":"初始化中"):"未接入","产品原型联调演示状态。"],
+    ["温度探针","粮温采集探针",online?(ready?"green":"yellow"):"yellow",online?(ready?"已联调":"初始化中"):"未接入","产品原型联调演示状态。"],
+    ["蜂鸣警报器","声光告警节点",online?(ready?"green":"yellow"):"yellow",online?(ready?"已联调":"初始化中"):"未接入","产品原型联调演示状态。"],
+    ["粮情数据","联调演示数据",online?(ready?"green":"yellow"):"yellow",online?(ready?"已同步":"等待同步"):"暂停","温度、湿度与风险等级为原型联调模拟数据。"]
   ].map(x=>`<div class="card device"><div class="statusline"><div><div class="ey">${x[0]}</div><h3>${x[1]}</h3></div><span class="tag ${x[2][0]}">${x[3]}</span></div><p>${x[4]}</p></div>`).join("");
 }
 function setMonitoringVisible(on){
@@ -337,7 +385,7 @@ function setMonitoringVisible(on){
   ];
   pairs.forEach(([dataId,emptyId])=>{
     const data=document.getElementById(dataId),empty=document.getElementById(emptyId);
-    if(data)data.classList.toggle("is-hidden",!on);
+    if(data){data.classList.toggle("is-hidden",!on);data.classList.toggle("data-reveal",on);}
     if(empty)empty.classList.toggle("is-hidden",on);
   });
   const refresh=$("#refresh");
@@ -369,16 +417,21 @@ function setMonitoringVisible(on){
 }
 function setDeviceOnline(on,detail){
   deviceOnline=on;
+  if(!on){
+    initializationRunId++;
+    initializationComplete=false;
+    setMonitoringVisible(false);
+    $("#initPanel").classList.add("is-hidden");
+  }
   renderDeviceCards();
-  setMonitoringVisible(on);
   const pill=$("#devicePill"),strip=$("#deviceStrip"),btn=$("#connectDevice"),foot=$("#terminalStatus");
   if(on){
     pill.className="pill device-on";pill.textContent="● 终端在线";
     strip.className="device-strip on";
-    strip.innerHTML="<b>● 粮安智守硬件终端已接入</b><span>"+(detail||"CH340 · USB 串口 · 联调数据同步中")+"</span>";
+    strip.innerHTML="<b>● 粮安智守硬件终端已接入</b><span>"+(detail||"CH340 · USB 串口已建立连接")+"</span>";
     btn.textContent="断开终端";btn.disabled=false;
     foot.textContent="● 终端在线";
-    $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 同步";
+    $("#heart").textContent="终端初始化中";
   }else{
     pill.className="pill device-off";pill.textContent="○ 终端离线";
     strip.className="device-strip off";
@@ -387,6 +440,54 @@ function setDeviceOnline(on,detail){
     foot.textContent="○ 终端离线";
     $("#heart").textContent="等待设备接入";
   }
+}
+function sleep(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+async function runInitializationSequence(){
+  const runId=++initializationRunId;
+  initializationComplete=false;
+  setMonitoringVisible(false);
+  const panel=$("#initPanel");
+  const offline=$("#overviewOffline");
+  panel.classList.remove("is-hidden");
+  offline.classList.add("is-hidden");
+  const steps=qsa("[data-init-step]");
+  steps.forEach(s=>s.classList.remove("active","done"));
+  const bar=$("#initProgressBar"),status=$("#initStatusText"),percent=$("#initPercent");
+  const messages=[
+    "终端已接入，正在建立设备链路...",
+    "蓝牙模块已接入，正在初始化通信...",
+    "温度探针模块已接入，正在加载采集通道...",
+    "蜂鸣警报器已接入，正在检查告警链路...",
+    "正在刷新粮情数据...",
+    "数据已同步到小程序"
+  ];
+  const delays=[950,1050,1050,1050,1250,1100];
+  for(let i=0;i<steps.length;i++){
+    if(!deviceOnline||runId!==initializationRunId)return;
+    steps.forEach((s,idx)=>{
+      s.classList.toggle("done",idx<i);
+      s.classList.toggle("active",idx===i);
+    });
+    status.textContent=messages[i];
+    const pct=Math.round((i/steps.length)*100);
+    percent.textContent=pct+"%";
+    bar.style.width=pct+"%";
+    $("#heart").textContent=messages[i].replace("...","");
+    await sleep(delays[i]);
+  }
+  if(!deviceOnline||runId!==initializationRunId)return;
+  steps.forEach(s=>{s.classList.remove("active");s.classList.add("done")});
+  bar.style.width="100%";percent.textContent="100%";
+  status.textContent="数据已同步到小程序";
+  initializationComplete=true;
+  renderDeviceCards();
+  demo("green");
+  setMonitoringVisible(true);
+  render();
+  $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 数据已同步";
+  await sleep(650);
+  if(deviceOnline&&runId===initializationRunId)panel.classList.add("is-hidden");
+  toast("数据已同步到小程序");
 }
 async function markDisconnected(showToast=true){
   const oldPort=serialPort;
@@ -401,6 +502,7 @@ async function markDisconnected(showToast=true){
     try{await oldPort.close()}catch(_){}
   }
   setDeviceOnline(false);
+  $("#overviewOffline").classList.remove("is-hidden");
   if(showToast) toast("CODBOT 终端已断开");
 }
 async function watchPhysicalDisconnect(p){
@@ -421,6 +523,7 @@ async function watchPhysicalDisconnect(p){
     if(serialPort===p && !manualClosing){
       serialPort=null;
       setDeviceOnline(false);
+      $("#overviewOffline").classList.remove("is-hidden");
       toast("CODBOT 终端已断开");
     }
   }
@@ -433,9 +536,9 @@ async function openSerialPort(p){
     const i=p.getInfo?p.getInfo():{};
     const info=(i.usbVendorId?"CH340 · VID "+i.usbVendorId.toString(16).toUpperCase():"USB 串口")+" · 联调数据同步中";
     setDeviceOnline(true,info);
-    demo("green");
-    toast("CODBOT 终端已接入");
+    toast("CODBOT 终端已接入，开始初始化");
     watchPhysicalDisconnect(p);
+    runInitializationSequence();
   }catch(e){
     serialPort=null;
     setDeviceOnline(false);
@@ -498,8 +601,8 @@ function demo(r){S.s.forEach(x=>x[4]="green");if(r=="green"){S.s[2][2]=22.6;S.s[
 qsa(".nav button").forEach(b=>b.onclick=()=>{qsa(".nav button").forEach(x=>x.classList.toggle("active",x==b));qsa(".page").forEach(x=>x.classList.toggle("active",x.id==b.dataset.page));$("#title").textContent=b.textContent.trim().replace(/^[^\u4e00-\u9fa5]+/,"")});
 qsa("[data-demo]").forEach(b=>b.onclick=()=>demo(b.dataset.demo));
 $("#connectDevice").onclick=connectDevice;
-$("#refresh").onclick=()=>{if(!deviceOnline){toast("请先连接终端");return}S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();toast("数据已刷新")};
+$("#refresh").onclick=()=>{if(!deviceOnline||!initializationComplete){toast("请等待终端初始化完成");return}S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();toast("数据已刷新")};
 $("#site").onchange=e=>toast("已切换到 "+e.target.value);
-renderDeviceCards();setMonitoringVisible(false);initSerial();setInterval(()=>{if(deviceOnline)$("#refresh").click()},5000);
+renderDeviceCards();setMonitoringVisible(false);$("#overviewOffline").classList.remove("is-hidden");initSerial();setInterval(()=>{if(deviceOnline&&initializationComplete)$("#refresh").click()},5000);
 </script>
 <link rel="stylesheet" href="/__host/pageshare-free-plan-overlay.css" data-pageshare-free-plan-overlay=""><a id="__pageshare-free-plan-overlay" href="https://pageshare.ai?utm_source=free_plan_overlay" target="_blank" rel="noopener noreferrer" title="Hosted by Pageshare.ai" aria-label="Hosted by Pageshare.ai" data-pageshare-free-plan-overlay=""><img src="/__host/pageshare-free-plan-overlay.svg" width="48" height="48" alt="PageShare.ai badge" decoding="async" loading="lazy"></a></body></html>

@@ -362,6 +362,7 @@ const S={risk:"yellow",env:{t:21.6,h:68.2},s:[["01","上层左侧",22.1,.2,"gree
 const $=q=>document.querySelector(q),qsa=q=>Array.from(document.querySelectorAll(q)),lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
 let deviceOnline=false,serialPort=null,serialReader=null,manualClosing=false,initializationRunId=0,initializationComplete=false;
 const CH340_VID=0x1A86;
+const SYNC_API="https://jubilant-frivolous-downgrade--cnjyh8tdr6.replit.app";
 function renderDeviceCards(){
   const root=$("#deviceCards");
   if(!root)return;
@@ -484,10 +485,21 @@ async function runInitializationSequence(){
   demo("green");
   setMonitoringVisible(true);
   render();
-  $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 数据已同步";
-  await sleep(650);
+  status.textContent="正在同步到小程序...";
+  $("#heart").textContent="正在同步到小程序";
+  const synced=await syncToCloud();
+  if(!deviceOnline||runId!==initializationRunId)return;
+  if(synced){
+    status.textContent="数据已同步到小程序";
+    $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 数据已同步";
+    toast("数据已同步到小程序");
+  }else{
+    status.textContent="云端同步失败，请检查网络";
+    $("#heart").textContent="云端同步失败";
+    toast("云端同步失败");
+  }
+  await sleep(900);
   if(deviceOnline&&runId===initializationRunId)panel.classList.add("is-hidden");
-  toast("数据已同步到小程序");
 }
 async function markDisconnected(showToast=true){
   const oldPort=serialPort;
@@ -503,6 +515,7 @@ async function markDisconnected(showToast=true){
   }
   setDeviceOnline(false);
   $("#overviewOffline").classList.remove("is-hidden");
+  syncOffline();
   if(showToast) toast("CODBOT 终端已断开");
 }
 async function watchPhysicalDisconnect(p){
@@ -589,6 +602,38 @@ async function initSerial(){
   });
 }
 
+async function syncToCloud(){
+  if(!deviceOnline||!initializationComplete)return false;
+  try{
+    const realtime={
+      siteId:"site-a",
+      siteName:$("#site").value,
+      deviceOnline:true,
+      ambientTemp:Number(S.env.t.toFixed(1)),
+      humidity:Number(S.env.h.toFixed(1)),
+      risk:risk(),
+      riskText:lab(risk()),
+      desc:risk()==="red"?"存在高风险异常，请尽快现场复核":risk()==="yellow"?"局部测点或环境指标需要加强观察":"当前各项指标稳定，保持正常监测",
+      sensors:S.s.map(x=>({id:x[0],name:x[1],temp:Number(x[2].toFixed(1)),delta:Number(x[3].toFixed(1)),level:x[4]})),
+      updateTime:new Date().toLocaleTimeString("zh-CN",{hour12:false}),
+      demoData:true
+    };
+    const history=series(16).map(x=>Number(x[2].toFixed(1)));
+    const alerts=S.alarms.map((a,i)=>({id:i+1,time:a[0],title:a[1],point:a[2],level:a[3],desc:a[4],handled:false}));
+    const opts=data=>({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+    const results=await Promise.all([
+      fetch(SYNC_API+"/api/realtime",opts(realtime)),
+      fetch(SYNC_API+"/api/history",opts({siteId:"site-a",values:history})),
+      fetch(SYNC_API+"/api/alerts",opts({siteId:"site-a",alerts}))
+    ]);
+    return results.every(x=>x.ok);
+  }catch(e){return false}
+}
+async function syncOffline(){
+  try{
+    await fetch(SYNC_API+"/api/realtime",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({siteId:"site-a",siteName:$("#site").value,deviceOnline:false,updateTime:new Date().toLocaleTimeString("zh-CN",{hour12:false}),demoData:true})});
+  }catch(e){}
+}
 function toast(x){let e=$("#toast");e.textContent=x;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1500)}
 function risk(){if(S.s.some(x=>x[4]=="red"))return"red";if(S.s.some(x=>x[4]=="yellow")||S.env.h>=67)return"yellow";return"green"}
 function sensors(root){root.innerHTML=S.s.map(x=>`<div class="sensor ${x[4]!="green"?"warn":""}"><div class="top"><span>探头 ${x[0]} · ${x[1]}</span><span class="tag ${x[4][0]}">${lab(x[4])}</span></div><strong>${x[2].toFixed(1)} ℃</strong><small class="muted">1小时变化 ${x[3]>=0?"+":""}${x[3].toFixed(1)}℃</small></div>`).join("")}
@@ -601,7 +646,7 @@ function demo(r){S.s.forEach(x=>x[4]="green");if(r=="green"){S.s[2][2]=22.6;S.s[
 qsa(".nav button").forEach(b=>b.onclick=()=>{qsa(".nav button").forEach(x=>x.classList.toggle("active",x==b));qsa(".page").forEach(x=>x.classList.toggle("active",x.id==b.dataset.page));$("#title").textContent=b.textContent.trim().replace(/^[^\u4e00-\u9fa5]+/,"")});
 qsa("[data-demo]").forEach(b=>b.onclick=()=>demo(b.dataset.demo));
 $("#connectDevice").onclick=connectDevice;
-$("#refresh").onclick=()=>{if(!deviceOnline||!initializationComplete){toast("请等待终端初始化完成");return}S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();toast("数据已刷新")};
+$("#refresh").onclick=async()=>{if(!deviceOnline||!initializationComplete){toast("请等待终端初始化完成");return}S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();const ok=await syncToCloud();toast(ok?"数据已刷新并同步":"数据已刷新，云端同步失败")};
 $("#site").onchange=e=>toast("已切换到 "+e.target.value);
 renderDeviceCards();setMonitoringVisible(false);$("#overviewOffline").classList.remove("is-hidden");initSerial();setInterval(()=>{if(deviceOnline&&initializationComplete)$("#refresh").click()},5000);
 </script>

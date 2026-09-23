@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b1f43">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>粮安智守 · 智能储粮监测平台</title>
 <style>
 :root{
@@ -93,6 +96,15 @@ h1{margin:3px 0 0;font-size:22px;color:#153767}
 .device-strip.on b{color:#176b46}
 .device-strip.off{background:linear-gradient(90deg,#fffafa,#ffffff);border-color:#efd9dc;color:#a25e68}
 .device-strip.off b{color:#914651}
+.cloud-sync{
+  margin:-4px 0 14px;padding:10px 14px;border-radius:12px;border:1px solid #dfe7f1;
+  background:#f8fbff;color:#6f8198;font-size:11px;display:flex;justify-content:space-between;gap:12px
+}
+.cloud-sync b{color:#385c83}
+.cloud-sync.ok{background:#effaf4;border-color:#bee5d0;color:#2d7656}
+.cloud-sync.ok b{color:#176b46}
+.cloud-sync.err{background:#fff4f4;border-color:#efc8cd;color:#a74c59}
+.cloud-sync.err b{color:#913a47}
 .card{
   background:rgba(255,255,255,.98);border:1px solid #e1e9f2;border-radius:17px;
   box-shadow:0 10px 30px rgba(23,54,91,.06)
@@ -281,6 +293,7 @@ h1{margin:3px 0 0;font-size:22px;color:#153767}
 
 <section class="page active" id="overview">
 <div id="deviceStrip" class="device-strip off"><b>○ 硬件终端未接入</b><span>首次使用请点击右上角“连接终端”，选择 USB-SERIAL CH340</span></div>
+<div id="cloudSyncState" class="cloud-sync"><b>☁ 微信云端</b><span>等待终端接入</span></div>
 <div id="initPanel" class="card init-panel is-hidden">
   <div class="init-top">
     <div><div class="ey">SYSTEM INITIALIZATION</div><h3>粮安智守终端初始化</h3></div>
@@ -354,7 +367,7 @@ h1{margin:3px 0 0;font-size:22px;color:#153767}
   <div id="adviceData" class="card section advice is-hidden"><div id="adviceBig"></div></div>
 </section>
 <section class="page" id="settings"><div class="pagehead"><div class="ey">SYSTEM SETTINGS</div><h2>系统设置</h2><div class="muted">预留网页版与微信小程序共用接口。</div></div><div class="settings"><div class="card"><h3>演示状态测试</h3><div class="controls"><button data-demo="green">模拟正常</button><button data-demo="yellow">模拟关注</button><button data-demo="red">模拟预警</button></div></div><div class="card"><h3>接口预留</h3><code>GET /api/realtime?siteId=...</code><code>GET /api/history?siteId=...&hours=24</code><code>GET /api/alerts?siteId=...</code><code>POST /api/alerts/:id/ack</code></div></div></section>
-<div class="footer"><span>粮安智守 · 智能粮情监测与预警平台 V1.3</span><span>CODBOT 设备联动 · 联调演示数据 · Web / 小程序接口预留</span></div>
+<div class="footer"><span>粮安智守 · 智能粮情监测与预警平台 V1.6</span><span>CODBOT 设备联动 · 微信云开发同步 · 联调演示数据</span></div>
 </main>
 </div><div class="toast" id="toast"></div>
 <script src="https://static.cloudbase.net/cloudbase-js-sdk/2.28.6/cloudbase.full.js"></script>
@@ -440,6 +453,12 @@ function setMonitoringVisible(on){
     $("#abn").textContent="--";
   }
 }
+function setCloudSyncState(type,msg){
+  const e=$("#cloudSyncState");
+  if(!e)return;
+  e.className="cloud-sync"+(type==="ok"?" ok":type==="err"?" err":"");
+  e.innerHTML="<b>☁ 微信云端</b><span>"+msg+"</span>";
+}
 function setDeviceOnline(on,detail){
   deviceOnline=on;
   if(!on){
@@ -457,6 +476,7 @@ function setDeviceOnline(on,detail){
     btn.textContent="断开终端";btn.disabled=false;
     foot.textContent="● 终端在线";
     $("#heart").textContent="终端初始化中";
+    setCloudSyncState("","终端已接入，等待初始化完成");
   }else{
     pill.className="pill device-off";pill.textContent="○ 终端离线";
     strip.className="device-strip off";
@@ -464,6 +484,7 @@ function setDeviceOnline(on,detail){
     btn.textContent="连接终端";btn.disabled=false;
     foot.textContent="○ 终端离线";
     $("#heart").textContent="等待设备接入";
+    setCloudSyncState("","等待终端接入");
   }
 }
 function sleep(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
@@ -511,15 +532,18 @@ async function runInitializationSequence(){
   render();
   status.textContent="正在同步到小程序...";
   $("#heart").textContent="正在同步到小程序";
+  setCloudSyncState("","正在写入微信云端...");
   const synced=await syncToCloud();
   if(!deviceOnline||runId!==initializationRunId)return;
   if(synced){
     status.textContent="数据已同步到小程序";
     $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 数据已同步";
+    setCloudSyncState("ok","同步成功 · 数据已写入微信云端");
     toast("数据已同步到小程序");
   }else{
     status.textContent="微信云端同步失败："+(lastCloudError||"未知错误");
     $("#heart").textContent="云端同步失败";
+    setCloudSyncState("err","同步失败："+(lastCloudError||"未知错误"));
     toast("同步失败："+(lastCloudError||"未知错误"));
   }
   await sleep(900);
@@ -699,7 +723,7 @@ function demo(r){S.s.forEach(x=>x[4]="green");if(r=="green"){S.s[2][2]=22.6;S.s[
 qsa(".nav button").forEach(b=>b.onclick=()=>{qsa(".nav button").forEach(x=>x.classList.toggle("active",x==b));qsa(".page").forEach(x=>x.classList.toggle("active",x.id==b.dataset.page));$("#title").textContent=b.textContent.trim().replace(/^[^\u4e00-\u9fa5]+/,"")});
 qsa("[data-demo]").forEach(b=>b.onclick=()=>demo(b.dataset.demo));
 $("#connectDevice").onclick=connectDevice;
-$("#refresh").onclick=async()=>{if(!deviceOnline||!initializationComplete){toast("请等待终端初始化完成");return}S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();const ok=await syncToCloud();toast(ok?"数据已刷新并同步":"同步失败："+(lastCloudError||"未知错误"))};
+$("#refresh").onclick=async()=>{if(!deviceOnline||!initializationComplete){toast("请等待终端初始化完成");return}S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();setCloudSyncState("","正在写入微信云端...");const ok=await syncToCloud();setCloudSyncState(ok?"ok":"err",ok?"同步成功 · 数据已写入微信云端":"同步失败："+(lastCloudError||"未知错误"));toast(ok?"数据已刷新并同步":"同步失败："+(lastCloudError||"未知错误"))};
 $("#site").onchange=e=>toast("已切换到 "+e.target.value);
 renderDeviceCards();setMonitoringVisible(false);$("#overviewOffline").classList.remove("is-hidden");initSerial();setInterval(()=>{if(deviceOnline&&initializationComplete)$("#refresh").click()},5000);
 </script>

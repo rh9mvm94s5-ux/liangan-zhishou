@@ -366,7 +366,7 @@ const CH340_VID=0x1A86;
 const CLOUD_ENV="cloud1-d9gspi69j0ee0d9cd";
 const cloudApp=cloudbase.init({env:CLOUD_ENV,region:"ap-shanghai"});
 const cloudAuth=cloudApp.auth();
-let cloudReadyPromise=null;
+let cloudReadyPromise=null,lastCloudError="";
 async function ensureCloudReady(){
   if(!cloudReadyPromise){
     cloudReadyPromise=(async()=>{
@@ -518,9 +518,9 @@ async function runInitializationSequence(){
     $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 数据已同步";
     toast("数据已同步到小程序");
   }else{
-    status.textContent="微信云端同步失败，请检查 grainSync";
+    status.textContent="微信云端同步失败："+(lastCloudError||"未知错误");
     $("#heart").textContent="云端同步失败";
-    toast("微信云端同步失败");
+    toast("同步失败："+(lastCloudError||"未知错误"));
   }
   await sleep(900);
   if(deviceOnline&&runId===initializationRunId)panel.classList.add("is-hidden");
@@ -651,11 +651,14 @@ async function syncToCloud(){
     });
     const result=normalizeCloudResult(res);
     if(!result||result.ok!==true){
+      lastCloudError=(result&&result.message)||"grainSync 返回异常";
       console.error("grainSync push failed",result);
       return false;
     }
+    lastCloudError="";
     return true;
   }catch(e){
+    lastCloudError=(e&&((e.code?e.code+": ":"")+(e.message||e.errMsg||"未知错误")))||"未知错误";
     console.error("CloudBase sync failed",e);
     return false;
   }
@@ -696,7 +699,7 @@ function demo(r){S.s.forEach(x=>x[4]="green");if(r=="green"){S.s[2][2]=22.6;S.s[
 qsa(".nav button").forEach(b=>b.onclick=()=>{qsa(".nav button").forEach(x=>x.classList.toggle("active",x==b));qsa(".page").forEach(x=>x.classList.toggle("active",x.id==b.dataset.page));$("#title").textContent=b.textContent.trim().replace(/^[^\u4e00-\u9fa5]+/,"")});
 qsa("[data-demo]").forEach(b=>b.onclick=()=>demo(b.dataset.demo));
 $("#connectDevice").onclick=connectDevice;
-$("#refresh").onclick=async()=>{if(!deviceOnline||!initializationComplete){toast("请等待终端初始化完成");return}S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();const ok=await syncToCloud();toast(ok?"数据已刷新并同步":"数据已刷新，云端同步失败")};
+$("#refresh").onclick=async()=>{if(!deviceOnline||!initializationComplete){toast("请等待终端初始化完成");return}S.s.forEach(x=>x[2]+= (Math.random()-.5)*.12);S.env.t+=(Math.random()-.5)*.08;S.env.h+=(Math.random()-.5)*.25;render();const ok=await syncToCloud();toast(ok?"数据已刷新并同步":"同步失败："+(lastCloudError||"未知错误"))};
 $("#site").onchange=e=>toast("已切换到 "+e.target.value);
 renderDeviceCards();setMonitoringVisible(false);$("#overviewOffline").classList.remove("is-hidden");initSerial();setInterval(()=>{if(deviceOnline&&initializationComplete)$("#refresh").click()},5000);
 </script>

@@ -6,13 +6,218 @@
 <meta name="theme-color" content="#0b1f43">
 <title>粮安智守 · 智能储粮监测平台</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;background:#f4f7fb;color:#15213c}.app{min-height:100vh;display:flex}.side{width:240px;position:fixed;inset:0 auto 0 0;background:linear-gradient(180deg,#0b1f43,#0d356d);color:white;padding:22px 16px;display:flex;flex-direction:column}.brand{display:flex;gap:12px;align-items:center;padding:4px 6px 22px;border-bottom:1px solid #ffffff1d}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#1a79ff,#ff7a16);display:grid;place-items:center;font-size:22px;font-weight:800}.brand b{display:block;font-size:18px}.brand span{font-size:12px;color:#a8caf2}.nav{display:grid;gap:8px;margin-top:18px}.nav button{border:0;background:transparent;color:#bed3f0;border-radius:11px;text-align:left;padding:12px 14px}.nav button.active,.nav button:hover{background:#2d74d8;color:white}.foot{margin-top:auto;border-top:1px solid #ffffff1d;padding-top:16px;font-size:12px;color:#a9c8ef}.main{margin-left:240px;width:calc(100% - 240px)}header{position:sticky;top:0;z-index:5;background:#f4f7fbe8;backdrop-filter:blur(10px);border-bottom:1px solid #dfe8f3;padding:18px 26px;display:flex;align-items:center;justify-content:space-between}h1{margin:3px 0 0;font-size:22px}.ey{font-size:11px;color:#6e86a8;letter-spacing:1.2px;font-weight:700}.tools{display:flex;gap:9px;align-items:center}.tools select,.tools button{border:1px solid #d8e3f0;background:white;border-radius:10px;padding:9px 11px;color:#244267}.pill{background:#fff7df;border:1px solid #edd79b;border-radius:999px;padding:9px 12px;color:#91620b;font-size:12px}.pill.device-on{background:#e8f7ef;border-color:#b9e5cd;color:#247f55}.pill.device-off{background:#f5f7fa;border-color:#dce5ef;color:#71839a}.device-strip{margin-bottom:13px;background:#f7f9fc;border:1px solid #dfe7f1;border-radius:13px;padding:12px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center;color:#71839a;font-size:12px}.device-strip b{color:#60738b}.device-strip.on{background:#edf9f2;border-color:#bfe7d0;color:#2d7b57}.device-strip.on b{color:#176b46}.device-strip.off{background:#fff7f7;border-color:#f1d4d8;color:#a76069}.device-strip.off b{color:#914651}.tools button:disabled{opacity:.7;cursor:default}.page{display:none;padding:22px 26px}.page.active{display:block}.card{background:white;border:1px solid #e2e9f2;border-radius:16px;box-shadow:0 10px 28px #17365b0e}.hero{padding:20px 22px;display:flex;justify-content:space-between;align-items:center}.hero h2{font-size:30px;margin:6px 0}.muted{color:#76869c;font-size:12px}.orb{width:13px;height:13px;border-radius:50%;display:inline-block;margin-right:10px}.green{background:#39bd79}.yellow{background:#f0b23e}.red{background:#eb5a5a}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:13px}.metric{padding:17px}.metric span{font-size:12px;color:#75869c}.metric b{display:block;font-size:30px;color:#153767;margin-top:8px}.metric small{font-size:12px;color:#8b99ab}.grid{display:grid;grid-template-columns:2fr 1fr;gap:13px;margin-top:13px}.section{padding:18px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.head h3{margin:3px 0;font-size:17px}.legend{font-size:11px;color:#788ba3}.chart{width:100%;height:auto}.risk{display:grid;gap:9px}.risk .item{border:1px solid #e6edf5;border-radius:11px;padding:11px}.risk .item b{font-size:13px}.risk .item p{margin:5px 0 0;color:#7b8ca4;font-size:11px}.sensors{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.sensor{background:#f9fbfe;border:1px solid #e5edf5;border-radius:12px;padding:13px}.sensor.warn{background:#fff9ed;border-color:#f2d89d}.sensor .top{display:flex;justify-content:space-between;color:#58708d;font-size:11px}.sensor strong{display:block;font-size:24px;color:#183968;margin-top:9px}.tag{border-radius:999px;padding:3px 7px;font-size:10px}.tag.g{background:#e8f7ef;color:#247f55}.tag.y{background:#fff0c9;color:#956500}.tag.r{background:#ffe5e5;color:#bd3c3c}.wide{grid-column:1/-1}.table{overflow:auto}.table table{width:100%;border-collapse:collapse;min-width:680px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf1f5;font-size:12px}.table th{background:#f7faff;color:#7889a0}.advice ol{margin:8px 0 0;padding-left:20px;color:#64758e;font-size:12px;line-height:1.8}.pagehead{margin-bottom:13px}.pagehead h2{margin:3px 0 5px}.devices{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.device{padding:17px}.device h3{margin:3px 0}.device p{color:#7b8ca3;font-size:11px;line-height:1.6}.statusline{display:flex;justify-content:space-between;align-items:center}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{border:1px solid #dbe5ef;background:white;border-radius:999px;padding:8px 12px}.settings{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.settings .card{padding:18px}.settings code{display:block;background:#10294e;color:#d9e8ff;padding:9px;border-radius:8px;margin-top:7px;font-size:11px}.footer{padding:18px 26px 28px;color:#99a6b7;font-size:10px;display:flex;justify-content:space-between}.toast{position:fixed;right:22px;bottom:22px;background:#132a4d;color:white;border-radius:10px;padding:10px 13px;opacity:0;transform:translateY(10px);transition:.2s}.toast.show{opacity:1;transform:none}.trend{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .9s ease-out forwards}.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 1.3s infinite}.scan{opacity:.18}@keyframes draw{to{stroke-dashoffset:0}}@keyframes pulse{50%{transform:scale(1.45);opacity:1}}@media(max-width:900px){.side{transform:translateX(-100%)}.main{margin:0;width:100%}.metrics{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.devices{grid-template-columns:repeat(2,1fr)}.sensors{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.metrics,.devices,.settings,.sensors{grid-template-columns:1fr}.tools .pill{display:none}.page{padding:16px}.hero{align-items:flex-start;flex-direction:column;gap:8px}}
+:root{
+  --nav:#0b1f43;
+  --nav2:#123d78;
+  --blue:#2f78dc;
+  --blue2:#66a8ff;
+  --bg:#f3f7fc;
+  --card:#ffffff;
+  --line:#dfe8f3;
+  --text:#15213c;
+  --muted:#7487a1;
+  --green:#35b779;
+  --yellow:#f0ab2f;
+  --red:#e85858;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#eef4fb 0,#f7f9fc 38%,#f4f7fb 100%);color:var(--text)}
+button,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:flex}
+.side{
+  width:236px;position:fixed;inset:0 auto 0 0;
+  background:
+    radial-gradient(circle at 30% 5%,rgba(85,160,255,.20),transparent 28%),
+    linear-gradient(180deg,#0a1d3c 0%,#0d2e60 58%,#0b244b 100%);
+  color:white;padding:20px 14px 18px;display:flex;flex-direction:column;
+  box-shadow:12px 0 40px rgba(21,48,92,.12);z-index:20
+}
+.brand{display:flex;gap:12px;align-items:center;padding:4px 7px 20px;border-bottom:1px solid rgba(255,255,255,.10)}
+.logo{
+  width:44px;height:44px;border-radius:14px;
+  background:linear-gradient(135deg,#5fa2ff,#f4a642);
+  display:grid;place-items:center;font-size:22px;font-weight:900;
+  box-shadow:0 8px 22px rgba(34,112,214,.28)
+}
+.brand b{display:block;font-size:18px;letter-spacing:.5px}
+.brand span{font-size:11px;color:#aecaf0;display:block;margin-top:3px}
+.nav{display:grid;gap:7px;margin-top:18px}
+.nav button{
+  border:1px solid transparent;background:transparent;color:#b9d0ee;
+  border-radius:12px;text-align:left;padding:12px 13px;transition:.18s ease;
+  font-size:13px;letter-spacing:.1px
+}
+.nav button:hover{background:rgba(255,255,255,.08);color:white;transform:translateX(2px)}
+.nav button.active{
+  background:linear-gradient(90deg,#2e74d7,#3e8bec);
+  color:white;border-color:rgba(255,255,255,.20);
+  box-shadow:0 7px 18px rgba(16,74,157,.28)
+}
+.foot{
+  margin-top:auto;border-top:1px solid rgba(255,255,255,.10);padding:15px 8px 0;
+  font-size:11px;color:#a9c8ef;line-height:1.8
+}
+.main{margin-left:236px;width:calc(100% - 236px);min-width:0}
+header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(247,250,254,.90);backdrop-filter:blur(14px);
+  border-bottom:1px solid #dfe8f3;padding:15px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px
+}
+h1{margin:3px 0 0;font-size:22px;color:#153767}
+.ey{font-size:10px;color:#6f87a7;letter-spacing:1.5px;font-weight:800}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.tools select,.tools button{
+  border:1px solid #d7e3ef;background:white;border-radius:10px;padding:9px 12px;color:#244267;
+  box-shadow:0 3px 10px rgba(32,67,110,.04)
+}
+.tools button:hover{border-color:#a8c8ed;background:#f8fbff}
+#connectDevice{
+  background:linear-gradient(135deg,#1f6ed4,#3d8bf0);color:white;border-color:transparent;font-weight:700
+}
+#connectDevice:hover{filter:brightness(1.04)}
+.pill{border-radius:999px;padding:8px 12px;font-size:11px;font-weight:700;white-space:nowrap}
+.pill.device-on{background:#e7f8ef;border:1px solid #b9e5cd;color:#247f55}
+.pill.device-off{background:#f2f5f8;border:1px solid #dce5ef;color:#71839a}
+.page{display:none;padding:20px 24px 12px}
+.page.active{display:block}
+.device-strip{
+  margin-bottom:14px;background:white;border:1px solid #dfe7f1;border-radius:14px;padding:13px 16px;
+  display:flex;justify-content:space-between;gap:18px;align-items:center;color:#71839a;font-size:12px;
+  box-shadow:0 7px 24px rgba(32,70,120,.05)
+}
+.device-strip b{color:#60738b}
+.device-strip.on{background:linear-gradient(90deg,#effbf5,#f9fffc);border-color:#bae5ce;color:#367b5b}
+.device-strip.on b{color:#176b46}
+.device-strip.off{background:linear-gradient(90deg,#fffafa,#ffffff);border-color:#efd9dc;color:#a25e68}
+.device-strip.off b{color:#914651}
+.card{
+  background:rgba(255,255,255,.98);border:1px solid #e1e9f2;border-radius:17px;
+  box-shadow:0 10px 30px rgba(23,54,91,.06)
+}
+.hero{
+  padding:21px 22px;display:flex;justify-content:space-between;align-items:center;
+  background:
+    radial-gradient(circle at 90% 15%,rgba(71,137,231,.10),transparent 22%),
+    linear-gradient(135deg,#ffffff,#f8fbff)
+}
+.hero h2{font-size:31px;margin:5px 0;color:#173968}
+.muted{color:#76869c;font-size:12px}
+.orb{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:9px;box-shadow:0 0 0 4px rgba(0,0,0,.025)}
+.green{background:var(--green)}
+.yellow{background:var(--yellow)}
+.red{background:var(--red)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:13px}
+.metric{padding:18px;position:relative;overflow:hidden}
+.metric:after{
+  content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-35px;top:-42px;
+  background:linear-gradient(135deg,rgba(65,137,231,.10),rgba(65,137,231,0))
+}
+.metric span{font-size:12px;color:#75869c}
+.metric b{display:block;font-size:31px;color:#173c70;margin-top:9px;letter-spacing:-.5px}
+.metric small{font-size:11px;color:#8b99ab}
+.grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,1fr);gap:13px;margin-top:13px}
+.section{padding:18px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:11px}
+.head h3{margin:3px 0;font-size:17px;color:#173968}
+.legend{font-size:11px;color:#788ba3}
+.chart{width:100%;height:auto;display:block}
+.risk{display:grid;gap:9px}
+.risk .item{
+  border:1px solid #e5edf6;border-radius:12px;padding:11px 12px;background:#fbfdff;
+  transition:.18s
+}
+.risk .item:hover{transform:translateY(-1px);border-color:#cfe0f3}
+.risk .item b{font-size:13px;color:#29496f}
+.risk .item p{margin:5px 0 0;color:#7b8ca4;font-size:11px;line-height:1.55}
+.sensors{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sensor{
+  background:#f9fbfe;border:1px solid #e4edf6;border-left:4px solid #49b985;
+  border-radius:12px;padding:13px;transition:.18s
+}
+.sensor:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(32,70,120,.06)}
+.sensor.warn{background:#fffaf0;border-color:#efd79b;border-left-color:#efae32}
+.sensor .top{display:flex;justify-content:space-between;gap:8px;color:#58708d;font-size:11px}
+.sensor strong{display:block;font-size:24px;color:#183968;margin-top:9px}
+.tag{border-radius:999px;padding:3px 8px;font-size:10px;font-weight:700}
+.tag.g{background:#e8f7ef;color:#247f55}
+.tag.y{background:#fff0c9;color:#956500}
+.tag.r{background:#ffe5e5;color:#bd3c3c}
+.wide{grid-column:1/-1}
+.table{overflow:auto}
+.table table{width:100%;border-collapse:collapse;min-width:680px}
+.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #edf1f5;font-size:12px}
+.table th{background:#f7faff;color:#7889a0;font-weight:700}
+.advice ol{margin:8px 0 0;padding-left:20px;color:#64758e;font-size:12px;line-height:1.85}
+.pagehead{margin-bottom:14px}
+.pagehead h2{margin:3px 0 5px;color:#173968}
+.devices{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.device{padding:18px;position:relative;overflow:hidden}
+.device:before{
+  content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#5a97e8
+}
+.device h3{margin:3px 0;color:#173968}
+.device p{color:#7b8ca3;font-size:11px;line-height:1.65}
+.statusline{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+.controls button{
+  border:1px solid #dbe5ef;background:white;border-radius:999px;padding:8px 12px;color:#315276
+}
+.controls button:hover{background:#f4f8fd;border-color:#bdd3ed}
+.settings{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.settings .card{padding:18px}
+.settings code{
+  display:block;background:#10294e;color:#d9e8ff;padding:9px 10px;border-radius:8px;margin-top:7px;
+  font-size:11px;overflow:auto
+}
+.device-flow{
+  margin-top:13px;padding:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:center
+}
+.flow-node{
+  background:#f7faff;border:1px solid #dfe8f3;border-radius:12px;padding:14px;text-align:center;
+  color:#355577;font-size:12px
+}
+.flow-node b{display:block;color:#173968;margin-bottom:4px}
+.footer{padding:16px 24px 26px;color:#99a6b7;font-size:10px;display:flex;justify-content:space-between;gap:14px}
+.toast{
+  position:fixed;right:22px;bottom:22px;background:#132a4d;color:white;border-radius:10px;padding:10px 13px;
+  opacity:0;transform:translateY(10px);transition:.2s;z-index:100;box-shadow:0 12px 30px rgba(0,0,0,.16)
+}
+.toast.show{opacity:1;transform:none}
+.trend{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .9s ease-out forwards}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 1.3s infinite}
+.scan{opacity:.18}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pulse{50%{transform:scale(1.45);opacity:1}}
+@media(max-width:1050px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .devices{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:1fr}
+}
+@media(max-width:900px){
+  .side{transform:translateX(-100%)}
+  .main{margin:0;width:100%}
+  .page{padding:16px}
+  header{padding:14px 16px}
+  .sensors{grid-template-columns:repeat(2,1fr)}
+  .device-flow{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:620px){
+  .metrics,.devices,.settings,.sensors,.device-flow{grid-template-columns:1fr}
+  .hero{align-items:flex-start;flex-direction:column;gap:10px}
+  .tools{justify-content:flex-start}
+  .tools .pill{display:none}
+  .device-strip{align-items:flex-start;flex-direction:column}
+  .footer{flex-direction:column}
+}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="side">
-<div class="brand"><div class="logo">粮</div><div><b>粮安智守</b><span>智能储粮监测平台</span></div></div>
+<div class="brand"><div class="logo">粮</div><div><b>粮安智守</b><span>智能粮情监测与预警平台</span></div></div>
 <div class="nav">
 <button class="active" data-page="overview">▦ 监控总览</button>
 <button data-page="realtime">◉ 实时监测</button>
@@ -28,7 +233,7 @@
 <header><div><div class="ey">GRAIN STORAGE MONITORING</div><h1 id="title">监控总览</h1></div><div class="tools"><select id="site"><option>1号庭院粮仓</option><option>2号合作社粮仓</option><option>3号家庭农场</option></select><button id="connectDevice">连接终端</button><button id="refresh">刷新数据</button><div class="pill device-off" id="devicePill">○ 终端离线</div></div></header>
 
 <section class="page active" id="overview">
-<div id="deviceStrip" class="device-strip off"><b>○ CODBOT 终端未接入</b><span>首次使用请点击右上角“连接终端”，选择 USB-SERIAL CH340</span></div>
+<div id="deviceStrip" class="device-strip off"><b>○ 硬件终端未接入</b><span>首次使用请点击右上角“连接终端”，选择 USB-SERIAL CH340</span></div>
 <div class="card hero"><div><span class="muted">当前综合状态</span><h2><i class="orb yellow" id="orb"></i><span id="riskText">关注</span></h2><div class="muted" id="riskDesc">局部测点或环境指标需要加强观察</div></div><div class="muted">数据更新时间<br><b id="time" style="font-size:17px;color:#29496f">--:--:--</b></div></div>
 <div class="metrics">
 <div class="card metric"><span>最高粮温</span><b><em id="maxT" style="font-style:normal">24.8</em><small> ℃</small></b><small id="maxP">探头 03</small></div>
@@ -48,10 +253,19 @@
 <section class="page" id="realtime"><div class="pagehead"><div class="ey">REAL-TIME MONITORING</div><h2>实时监测</h2><div class="muted">显示 6 路粮温探头与环境状态。</div></div><div class="card section"><div id="sensorGrid2" class="sensors"></div></div></section>
 <section class="page" id="trend"><div class="pagehead"><div class="ey">TREND ANALYSIS</div><h2>趋势分析</h2><div class="muted">同时参考绝对温度、测点差异和变化趋势。</div></div><div class="card section"><svg id="chart2" class="chart" viewBox="0 0 1200 420"></svg></div></section>
 <section class="page" id="alarm"><div class="pagehead"><div class="ey">RISK ALERTS</div><h2>风险预警</h2><div class="muted">记录异常时间、测点、类型和等级。</div></div><div class="card section table"><table><thead><tr><th>时间</th><th>事件</th><th>位置</th><th>等级</th><th>说明</th></tr></thead><tbody id="alarmRows2"></tbody></table></div></section>
-<section class="page" id="device"><div class="pagehead"><div class="ey">DEVICE MANAGEMENT</div><h2>设备管理</h2><div class="muted">查看主控、探头、环境节点与通信模块。</div></div><div id="deviceCards" class="devices"></div></section>
+<section class="page" id="device">
+<div class="pagehead"><div class="ey">DEVICE MANAGEMENT</div><h2>设备管理</h2><div class="muted">查看主控终端、USB通信与模拟监测节点状态。</div></div>
+<div id="deviceCards" class="devices"></div>
+<div class="card device-flow">
+  <div class="flow-node"><b>01 · 终端接入</b>CODBOT 开发板</div>
+  <div class="flow-node"><b>02 · USB 通信</b>CH340 串口识别</div>
+  <div class="flow-node"><b>03 · 数据联调</b>模拟粮情数据刷新</div>
+  <div class="flow-node"><b>04 · 平台展示</b>网页 / 小程序接口预留</div>
+</div>
+</section>
 <section class="page" id="advice"><div class="pagehead"><div class="ey">ACTION GUIDANCE</div><h2>处置建议</h2><div class="muted">只提供监测、风险提示与检查建议，不替代人工决策。</div></div><div class="card section advice"><div id="adviceBig"></div></div></section>
 <section class="page" id="settings"><div class="pagehead"><div class="ey">SYSTEM SETTINGS</div><h2>系统设置</h2><div class="muted">预留网页版与微信小程序共用接口。</div></div><div class="settings"><div class="card"><h3>演示状态测试</h3><div class="controls"><button data-demo="green">模拟正常</button><button data-demo="yellow">模拟关注</button><button data-demo="red">模拟预警</button></div></div><div class="card"><h3>接口预留</h3><code>GET /api/realtime?siteId=...</code><code>GET /api/history?siteId=...&hours=24</code><code>GET /api/alerts?siteId=...</code><code>POST /api/alerts/:id/ack</code></div></div></section>
-<div class="footer"><span>粮安智守 · 智能储粮监测平台 V1.2</span><span>CODBOT 设备联动 · 联调演示数据 · Web / 小程序接口预留</span></div>
+<div class="footer"><span>粮安智守 · 智能粮情监测与预警平台 V1.3</span><span>CODBOT 设备联动 · 联调演示数据 · Web / 小程序接口预留</span></div>
 </main>
 </div><div class="toast" id="toast"></div>
 <script>
@@ -59,20 +273,31 @@ const S={risk:"yellow",env:{t:21.6,h:68.2},s:[["01","上层左侧",22.1,.2,"gree
 const $=q=>document.querySelector(q),qsa=q=>Array.from(document.querySelectorAll(q)),lab=r=>({green:"正常",yellow:"关注",red:"预警"})[r];
 let deviceOnline=false,serialPort=null,serialReader=null,manualClosing=false;
 const CH340_VID=0x1A86;
+function renderDeviceCards(){
+  const root=$("#deviceCards");
+  if(!root)return;
+  const online=deviceOnline;
+  root.innerHTML=[
+    ["主控终端","CODBOT STM32 开发板",online?"green":"yellow",online?"在线":"待接入","作为硬件演示终端，与网页建立 USB 串口连接。"],
+    ["通信链路","USB-SERIAL CH340",online?"green":"yellow",online?"已连接":"未连接","负责电脑端串口识别，用于触发网页终端在线状态。"],
+    ["粮情数据","联调演示数据",online?"green":"yellow",online?"同步中":"暂停","温度、湿度与风险等级为产品原型联调模拟数据。"]
+  ].map(x=>`<div class="card device"><div class="statusline"><div><div class="ey">${x[0]}</div><h3>${x[1]}</h3></div><span class="tag ${x[2][0]}">${x[3]}</span></div><p>${x[4]}</p></div>`).join("");
+}
 function setDeviceOnline(on,detail){
   deviceOnline=on;
+  renderDeviceCards();
   const pill=$("#devicePill"),strip=$("#deviceStrip"),btn=$("#connectDevice"),foot=$("#terminalStatus");
   if(on){
     pill.className="pill device-on";pill.textContent="● 终端在线";
     strip.className="device-strip on";
-    strip.innerHTML="<b>● CODBOT 终端已接入</b><span>"+(detail||"CH340 · USB 串口 · 联调数据同步中")+"</span>";
+    strip.innerHTML="<b>● 粮安智守硬件终端已接入</b><span>"+(detail||"CH340 · USB 串口 · 联调数据同步中")+"</span>";
     btn.textContent="断开终端";btn.disabled=false;
     foot.textContent="● 终端在线";
     $("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 同步";
   }else{
     pill.className="pill device-off";pill.textContent="○ 终端离线";
     strip.className="device-strip off";
-    strip.innerHTML="<b>○ CODBOT 终端未接入</b><span>插入绿色 CODBOT；首次使用点击右上角“连接终端”，选择 USB-SERIAL CH340</span>";
+    strip.innerHTML="<b>○ 硬件终端未接入</b><span>插入绿色 CODBOT；首次使用点击右上角“连接终端”，选择 USB-SERIAL CH340</span>";
     btn.textContent="连接终端";btn.disabled=false;
     foot.textContent="○ 终端离线";
     $("#heart").textContent="等待设备接入";
@@ -183,7 +408,7 @@ function series(n){let a=[],ph=Date.now()/7000;for(let i=0;i<n;i++){let t=i/(n-1
 function chart(svg,w,h,n){let d=series(n),p={l:46,r:18,t:18,b:36},min=16,max=32,X=t=>p.l+t*(w-p.l-p.r),Y=v=>p.t+(max-v)/(max-min)*(h-p.t-p.b),path=k=>d.map((v,i)=>(i?"L":"M")+X(v[0]).toFixed(1)+","+Y(v[k]).toFixed(1)).join(" "),g=[];for(let v=16;v<=32;v+=2){g.push(`<line x1="${p.l}" y1="${Y(v)}" x2="${w-p.r}" y2="${Y(v)}" stroke="#e8eef6"/><text x="${p.l-8}" y="${Y(v)+4}" text-anchor="end" fill="#8697ab" font-size="11">${v}</text>`)}let z=d[d.length-1];svg.innerHTML=g.join("")+`<path class="trend" pathLength="1" d="${path(1)}" fill="none" stroke="#2f78dc" stroke-width="3"/><path class="trend" pathLength="1" d="${path(2)}" fill="none" stroke="#f2a23b" stroke-width="3"/><path class="trend" pathLength="1" d="${path(3)}" fill="none" stroke="#53b494" stroke-width="3"/><line class="scan" id="scan${svg.id}" x1="${p.l}" y1="${p.t}" x2="${p.l}" y2="${h-p.b}" stroke="#2f78dc" stroke-width="2"/><circle class="pulse" cx="${X(1)}" cy="${Y(z[2])}" r="5" fill="#f2a23b"/>`;let line=svg.querySelector(".scan"),start=performance.now(),dist=w-p.l-p.r;(function go(now){if(!document.body.contains(svg))return;line.setAttribute("transform","translate("+(((now-start)%3800)/3800*dist)+" 0)");requestAnimationFrame(go)})(start)}
 function alarms(id){$(id).innerHTML=S.alarms.map(a=>`<tr><td>${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td><span class="tag ${a[3][0]}">${lab(a[3])}</span></td><td>${a[4]}</td></tr>`).join("")}
 function advice(root){let r=risk(),arr=r=="red"?["优先现场复核红色预警测点。","检查局部发热、返潮、结露及通风条件。","结合人工判断决定是否采取通风或进一步检测。"]:r=="yellow"?["复核最高粮温测点并观察后续变化。","检查环境湿度及粮堆表层是否存在结露、返潮。","保持通风条件可用，避免高湿环境下盲目长时间通风。"]:["保持当前巡检频率。","定期检查探头与线缆。","保留历史数据用于趋势对比。"];root.innerHTML=`<h3><i class="orb ${r}"></i>${lab(r)}状态</h3><ol>${arr.map(x=>"<li>"+x+"</li>").join("")}</ol>`}
-function render(){let r=risk(),m=S.s.reduce((a,b)=>a[2]>b[2]?a:b);$("#orb").className="orb "+r;$("#riskText").textContent=lab(r);$("#riskDesc").textContent=r=="red"?"存在高风险异常，请尽快现场复核":r=="yellow"?"局部测点或环境指标需要加强观察":"当前各项指标稳定，保持正常监测";$("#time").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false});$("#maxT").textContent=m[2].toFixed(1);$("#maxP").textContent="探头 "+m[0];$("#envT").textContent=S.env.t.toFixed(1);$("#hum").textContent=S.env.h.toFixed(1);$("#abn").textContent=S.s.filter(x=>x[4]!="green").length;sensors($("#sensorGrid"));sensors($("#sensorGrid2"));$("#riskList").innerHTML=[["环境湿度",S.env.h>=67?"yellow":"green",S.env.h.toFixed(1)+"%RH"],["局部粮温",m[2]>=27?"red":m[2]>=24?"yellow":"green",m[2].toFixed(1)+"℃ · 探头 "+m[0]],["变化趋势",S.s.some(x=>x[3]>=.7)?"yellow":"green","同时参考持续升温与测点差异"],["通信状态","green","控制终端在线，数据同步正常"]].map(x=>`<div class="item"><b><i class="orb ${x[1]}" style="width:9px;height:9px"></i>${x[0]}</b><p>${x[2]}</p></div>`).join("");advice($("#adviceBox"));advice($("#adviceBig"));alarms("#alarmRows");alarms("#alarmRows2");chart($("#chart1"),900,320,24);chart($("#chart2"),1200,420,40);$("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 同步"}
+function render(){renderDeviceCards();let r=risk(),m=S.s.reduce((a,b)=>a[2]>b[2]?a:b);$("#orb").className="orb "+r;$("#riskText").textContent=lab(r);$("#riskDesc").textContent=r=="red"?"存在高风险异常，请尽快现场复核":r=="yellow"?"局部测点或环境指标需要加强观察":"当前各项指标稳定，保持正常监测";$("#time").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false});$("#maxT").textContent=m[2].toFixed(1);$("#maxP").textContent="探头 "+m[0];$("#envT").textContent=S.env.t.toFixed(1);$("#hum").textContent=S.env.h.toFixed(1);$("#abn").textContent=S.s.filter(x=>x[4]!="green").length;sensors($("#sensorGrid"));sensors($("#sensorGrid2"));$("#riskList").innerHTML=[["环境湿度",S.env.h>=67?"yellow":"green",S.env.h.toFixed(1)+"%RH"],["局部粮温",m[2]>=27?"red":m[2]>=24?"yellow":"green",m[2].toFixed(1)+"℃ · 探头 "+m[0]],["变化趋势",S.s.some(x=>x[3]>=.7)?"yellow":"green","同时参考持续升温与测点差异"],["通信状态","green","控制终端在线，数据同步正常"]].map(x=>`<div class="item"><b><i class="orb ${x[1]}" style="width:9px;height:9px"></i>${x[0]}</b><p>${x[2]}</p></div>`).join("");advice($("#adviceBox"));advice($("#adviceBig"));alarms("#alarmRows");alarms("#alarmRows2");chart($("#chart1"),900,320,24);chart($("#chart2"),1200,420,40);$("#heart").textContent=new Date().toLocaleTimeString("zh-CN",{hour12:false})+" 同步"}
 function demo(r){S.s.forEach(x=>x[4]="green");if(r=="green"){S.s[2][2]=22.6;S.s[2][3]=.2;S.env.h=61.8}else if(r=="yellow"){S.s[2][2]=24.8;S.s[2][3]=.8;S.s[2][4]="yellow";S.env.h=68.2}else{S.s[2][2]=29.6;S.s[2][3]=1.6;S.s[2][4]="red";S.env.h=74.1}render();toast("已切换为"+lab(r)+"演示状态")}
 qsa(".nav button").forEach(b=>b.onclick=()=>{qsa(".nav button").forEach(x=>x.classList.toggle("active",x==b));qsa(".page").forEach(x=>x.classList.toggle("active",x.id==b.dataset.page));$("#title").textContent=b.textContent.trim().replace(/^[^\u4e00-\u9fa5]+/,"")});
 qsa("[data-demo]").forEach(b=>b.onclick=()=>demo(b.dataset.demo));
